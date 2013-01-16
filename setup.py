@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='django-google-analytics',
-    version='0.0.1',
+    name='django-google-analytics-app',
+    version='0.0.5',
     description='Django Google Analytics app allowing for server side/non-js tracking.',
     long_description=open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
     author='Praekelt Foundation',
