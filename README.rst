@@ -11,6 +11,7 @@ Installation
 #. Install or add ``django-google-analytics`` to your Python path.
 #. Add ``google_analytics`` to you ``INSTALLED_APPS`` setting.
 #. Add URL include to your project's ``urls.py`` file::
+
     (r'^djga/', include('google_analytics.urls')),
 #. Specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_, i.e.::
 
@@ -18,7 +19,7 @@ Installation
         'google_analytics_id': 'xxx',
     }
 
-    where ``xxx`` is your tracking code::
+   where ``xxx`` is your tracking code::
 
 Usage
 -----
