@@ -5,7 +5,6 @@ urlpatterns = patterns('',
     url(
         r'^google-analytics/$',
         'google_analytics.views.google_analytics',
-        {},
-        'google-analytics'
+        name='google-analytics'
     ),
 )
