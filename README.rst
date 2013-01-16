@@ -13,6 +13,7 @@ Installation
 #. Add URL include to your project's ``urls.py`` file::
 
     (r'^djga/', include('google_analytics.urls')),
+
 #. Specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_, i.e.::
 
     GOOGLE_ANALYTICS = {
@@ -33,24 +34,25 @@ There are two ways to add tracking to your pages.
 
 Using ``<img/>`` and sticking it in your ``base.html``::
 
- {% load google_analytics_tags %}
- <div style="display:none">
-    <img src="{% google_analytics %}" width="0" height="0" />
- </div>
+    {% load google_analytics_tags %}
+    <div style="display:none">
+        <img src="{% google_analytics %}" width="0" height="0" />
+    </div>
 
 2. Middleware + Celery
 **********************
 
 Using Django's middleware, you can process every request and use Celery to make the request to Google Analytics::
 
- MIDDLEWARE_CLASSES = (
-    'google_analytics.middleware.GoogleAnalyticsMiddleware',
- )
+    MIDDLEWARE_CLASSES = (
+        'google_analytics.middleware.GoogleAnalyticsMiddleware',
+    )
 
 You have to add ``google_analytics`` to your ``CELERY_IMPORTS``::
 
- CELERY_IMPORTS = ('google_analytics.tasks')
+    CELERY_IMPORTS = ('google_analytics.tasks')
 
 You can also specify paths that will be excluded when tracking::
 
- GOOGLE_ANALYTICS_IGNORE_PATH = ['/health/', ]
+    GOOGLE_ANALYTICS_IGNORE_PATH = ['/health/', ]
+
