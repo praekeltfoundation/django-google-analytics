@@ -5,18 +5,20 @@ Django Google Analytics
 .. contents:: Contents
     :depth: 3
 
-Required
---------
+Installation
+------------
 
-* You have to add ``google_analytics`` to you ``INSTALLED_APPS``
-* You have to specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_.
+#. Install or add ``django-google-analytics`` to your Python path.
+#. Add ``google_analytics`` to you ``INSTALLED_APPS`` setting.
+#. Add URL include to your project's ``urls.py`` file::
+    (r'^djga/', include('google_analytics.urls')),
+#. Specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_, i.e.::
 
-where ``xxx`` is your tracking code::
+    GOOGLE_ANALYTICS = {
+        'google_analytics_id': 'xxx',
+    }
 
- GOOGLE_ANALYTICS = {
-    'google_analytics_id': 'xxx',
- }
-
+    where ``xxx`` is your tracking code::
 
 Usage
 -----
