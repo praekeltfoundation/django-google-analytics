@@ -11,7 +11,7 @@ setup(
     license='BSD',
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
-    install_requires = [
+    install_requires=[
         'httplib2',
     ],
     include_package_data=True,
