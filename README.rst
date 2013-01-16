@@ -21,7 +21,7 @@ Installation
 
    where ``xxx`` is your tracking code.
 
-#. If you intend tracking through middleware and Celery remember to `install Celery and run its worker process<http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html>`_.
+#. If you intend tracking through middleware and Celery remember to `install Celery and run its worker process <http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html>`_.
 
 Usage
 -----
