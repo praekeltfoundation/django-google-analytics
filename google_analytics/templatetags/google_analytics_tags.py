@@ -5,7 +5,8 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from google_analytics import CAMPAIGN_TRACKING_PARAMS
+from google_analytics import (GA_CAMPAIGN_TRACKING_PARAMS,
+                              UA_CAMPAIGN_TRACKING_PARAMS)
 
 
 register = template.Library()
@@ -33,8 +34,12 @@ class GoogleAnalyticsNode(template.Node):
             raise RuntimeError("Request context required")
         # intialise the parameters collection
         params = {}
+        if settings.GOOGLE_ANALYTICS.get('USE_UA', False):
+            campaign_tracking_params = UA_CAMPAIGN_TRACKING_PARAMS
+        else:
+            campaign_tracking_params = GA_CAMPAIGN_TRACKING_PARAMS
         # collect the campaign tracking parameters from the request
-        for param in CAMPAIGN_TRACKING_PARAMS:
+        for param in campaign_tracking_params:
             value = request.REQUEST.get(param, None)
             if value:
                 params[param] = value
@@ -47,14 +52,14 @@ class GoogleAnalyticsNode(template.Node):
         parsed_url = urlparse.urlparse(path)
         query = urlparse.parse_qs(parsed_url.query)
         for param in params:
-            if query.has_key(param):
+            if param in query:
                 del query[param]
         query = urllib.urlencode(query)
         new_url = parsed_url._replace(query=query)
         params['p'] = new_url.geturl()
         # append the debug parameter if requested
         if self.debug:
-            params['utmdebug'] = 1
+            params['gadebug'] = 1
         # build and return the url
         url = reverse('google-analytics')
         if len(params) > 0:

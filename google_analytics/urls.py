@@ -1,7 +1,8 @@
 from django.conf.urls.defaults import *
 
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(
         r'^google-analytics/$',
         'google_analytics.views.google_analytics',

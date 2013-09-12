@@ -3,8 +3,11 @@ import re
 import struct
 
 from django.http import HttpResponse
+from django.conf import settings
 from django.views.decorators.cache import never_cache
-from google_analytics.utils import build_ga_params, set_cookie
+from google_analytics.utils import (build_ga_params,
+                                    build_ua_params,
+                                    set_cookie)
 
 
 GIF_DATA = reduce(lambda x, y: x + struct.pack('B', y),
@@ -28,33 +31,44 @@ def get_ip(remote_address):
 
 
 def google_analytics_request(request, response, path=None, event=None):
-    params = build_ga_params(request, event=event)
+    if settings.GOOGLE_ANALYTICS.get('USE_UA', False):
+        params = build_ua_params(request, event=event)
+    else:
+        params = build_ga_params(request, event=event)
 
     set_cookie(params, response)
 
-    utm_url = params.get('utm_url')
+    url = params.get('url')
     user_agent = params.get('user_agent')
     language = params.get('language')
+    body = params.get('body')
+    request_method = params.get('request_method')
+
+    request_kwargs = {
+        'headers': {
+            'User-Agent': user_agent,
+            'Accept-Language:': language
+        }
+    }
+    if request_method not in ('GET', 'HEAD') and body:
+        request_kwargs['body'] = body
 
     # send the request
     http = httplib2.Http()
     try:
         resp, content = http.request(
-            utm_url, 'GET',
-            headers={
-                'User-Agent': user_agent,
-                'Accepts-Language:': language
-            }
+            url, request_method,
+            **request_kwargs
         )
         # send debug headers if debug mode is set
-        if request.GET.get('utmdebug', False):
-            response['X-GA-MOBILE-URL'] = utm_url
+        if request.GET.get('gadebug', False):
+            response['X-GA-MOBILE-URL'] = url
             response['X-GA-RESPONSE'] = resp
 
         # return the augmented response
         return response
     except httplib2.HttpLib2Error:
-        raise Exception("Error opening: %s" % utm_url)
+        raise Exception("Error opening: %s" % url)
 
 
 @never_cache
