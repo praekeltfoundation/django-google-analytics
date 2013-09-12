@@ -47,7 +47,8 @@ def google_analytics_request(request, response, path=None, event=None):
     request_kwargs = {
         'headers': {
             'User-Agent': user_agent,
-            'Accept-Language:': language
+            'Accept-Language': language,
+            'X-Forwarded-For': request.META.get('HTTP_X_FORWARDED_FOR', '')
         }
     }
     if request_method not in ('GET', 'HEAD') and body:

@@ -21,7 +21,7 @@ UA_CAMPAIGN_PARAMS_KEY = 'ua_campagin_params'
 def get_account_id():
      # get the account id
     try:
-        account = settings.GOOGLE_ANALYTICS['google_analytics_id']
+        return settings.GOOGLE_ANALYTICS['google_analytics_id']
     except:
         raise Exception("No Google Analytics ID configured")
 
@@ -87,6 +87,11 @@ def get_generic_request_data(request, account, path=None, referer=None):
     cookie = request.COOKIES.get(COOKIE_NAME)
     visitor_id = get_visitor_id(request.META.get('HTTP_X_DCMGUID', ''),
                                 account, user_agent, cookie)
+    ip = request.META.get('HTTP_X_FORWARDED_FOR', None)
+    if ip:
+        ip = ip.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
 
     return {
         'domain': request.META.get('HTTP_HOST', ''),
@@ -96,13 +101,13 @@ def get_generic_request_data(request, account, path=None, referer=None):
         'language': request.META.get('HTTP_ACCEPT_LANGUAGE', ''),
         'cookie': cookie,
         'visitor_id': visitor_id,
-        'ip': request.META.get('REMOTE_ADDR', '')
+        'ip': ip
     }
 
 
 def build_ga_params(request, path=None, event=None, referer=None):
     account = get_account_id()
-    generic_data = get_generic_request_data(request, account, event, referer)
+    generic_data = get_generic_request_data(request, account, path, referer)
 
     # build the parameter collection
     params = {
@@ -112,7 +117,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
         'utmsr': '',
         'utme': '',
         'utmr': generic_data['referer'],
-        'utmp': path,
+        'utmp': generic_data['path'],
         'utmac': account,
         'utmcc': '__utma=%s;' % gen_utma(generic_data['domain']),
         'utmvid': generic_data['visitor_id'],
@@ -159,7 +164,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
 def build_ua_params(request, path=None, event=None, referer=None):
     account = get_account_id()
-    generic_data = get_generic_request_data(request, account, event, referer)
+    generic_data = get_generic_request_data(request, account, path, referer)
 
     # build the parameter collection
     params = {
@@ -167,7 +172,7 @@ def build_ua_params(request, path=None, event=None, referer=None):
         'z': str(random.randint(0, 0x7fffffff)),
         'dh': generic_data['domain'],
         'dr': generic_data['referer'],
-        'dp': path,
+        'dp': generic_data['path'],
         'tid': account,
         'cid': generic_data['visitor_id'],
     }
@@ -193,16 +198,14 @@ def build_ua_params(request, path=None, event=None, referer=None):
     # add campaign tracking parameters if provided
     params.update(campaign_params)
 
-    # construct the gif hit url
-    endpoint = "http://www.google-analytics.com/collect"
     body = urllib.urlencode(params)
 
     return {
-        'url': endpoint,
+        'url': "http://www.google-analytics.com/collect",
         'body': body,
         'request_method': 'POST',
         'user_agent': generic_data['user_agent'],
-        'language': generic_data['language']
+        'language': generic_data['language'],
         'visitor_id': generic_data['visitor_id'],
         'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
         'COOKIE_NAME': COOKIE_NAME,

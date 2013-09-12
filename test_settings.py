@@ -1,3 +1,7 @@
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -9,9 +13,7 @@ DATABASES = {
     }
 }
 
-GOOGLE_ANALYTICS = {
-    'google_analytics_id': '',
-}
+SECRET_KEY = 'x'
 
 ROOT_URLCONF = 'google_analytics.urls'
 
@@ -19,6 +21,7 @@ GOOGLE_ANALYTICS = {
     'google_analytics_id': 'UA-00000000-00',
 }
 
-INSTALL_APPS = (
+INSTALLED_APPS = (
     'google_analytics',
+    'django.contrib.sessions',
 )
