@@ -25,7 +25,11 @@ class GoogleAnalyticsNode(template.Node):
     def render(self, context):
         # Trivial case
         try:
-            assert settings.GOOGLE_ANALYTICS['google_analytics_id']
+            assert (
+                settings.GOOGLE_ANALYTICS.get('google_analytics_id', 0) or
+                settings.GOOGLE_ANALYTICS.get('ga_google_analytics_id', 0) or
+                settings.GOOGLE_ANALYTICS.get('ua_google_analytics_id', 0)
+            )
         except:
             return ''
 

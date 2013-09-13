@@ -20,11 +20,17 @@ UA_CAMPAIGN_PARAMS_KEY = 'ua_campagin_params'
 
 
 def get_account_id(use_ua=False):
-     # get the account id
+    # if use_ua = True, try ua_google_analytics_id
+    # if use_ua = False, try ga_google_analytics_id
+    # fallback to google_analytics_id
     try:
-        account_id = settings.GOOGLE_ANALYTICS['google_analytics_id']
+        default = settings.GOOGLE_ANALYTICS.get('google_analytics_id', '')
         if use_ua:
+            account_id = settings.GOOGLE_ANALYTICS.get('ua_google_analytics_id',
+                                                       default)
             return 'UA%s' % account_id[2:]
+        account_id = settings.GOOGLE_ANALYTICS.get('ga_google_analytics_id',
+                                                   default)
         return 'MO%s' % account_id[2:]
     except:
         raise Exception("No Google Analytics ID configured")

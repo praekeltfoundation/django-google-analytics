@@ -75,7 +75,7 @@ class GATestCase(BaseTestCase):
             'utmhn': self.HEADERS['HTTP_HOST'],
             'utmr': self.HEADERS['HTTP_REFERER'],
             'utmp': self.PATH,
-            'utmac': settings.GOOGLE_ANALYTICS['google_analytics_id']
+            'utmac': settings.GOOGLE_ANALYTICS['ga_google_analytics_id']
             .replace('UA', 'MO'),
             'utmip': self.HEADERS['HTTP_X_FORWARDED_FOR'],
         }
@@ -98,8 +98,8 @@ class GATestCase(BaseTestCase):
                          visitor_id)
 
 
-def custom_dimensions(request):
-    return {}
+def custom_data(request):
+    return {'cd1': 'CustomValue', 'cm1': 1}
 
 
 class UATestCase(BaseTestCase):
@@ -118,7 +118,7 @@ class UATestCase(BaseTestCase):
             'dh': self.HEADERS['HTTP_HOST'],
             'dr': self.HEADERS['HTTP_REFERER'],
             'dp': self.PATH,
-            'tid': settings.GOOGLE_ANALYTICS['google_analytics_id'],
+            'tid': settings.GOOGLE_ANALYTICS['ua_google_analytics_id'],
             't': 'pageview',
         }
         body = Http.request.call_args[1]['body']
