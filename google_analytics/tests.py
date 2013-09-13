@@ -140,4 +140,8 @@ class UATestCase(BaseTestCase):
                          visitor_id)
 
     def test_custom_data(self):
-        pass
+        ga_url = self.create_gif_url(True)
+        self.client.get(ga_url)
+        body = Http.request.call_args[1]['body']
+        for key, val in {'cd1': 'CustomValue', 'cm1': 1}.iteritems():
+            self.assertIn(urlencode({key: val}), body)

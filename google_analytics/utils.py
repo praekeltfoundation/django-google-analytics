@@ -3,6 +3,7 @@ import random
 import time
 import urllib
 import uuid
+from importlib import import_module
 
 from django.conf import settings
 from google_analytics import (GA_CAMPAIGN_TRACKING_PARAMS,
@@ -17,6 +18,24 @@ COOKIE_PATH = '/'
 COOKIE_USER_PERSISTENCE = 63072000
 GA_CAMPAIGN_PARAMS_KEY = 'ga_campaign_params'
 UA_CAMPAIGN_PARAMS_KEY = 'ua_campagin_params'
+
+
+def get_custom_data_providers():
+    if not hasattr(get_custom_data_providers, 'providers'):
+        providers = []
+        # import the custom data providers
+        for import_str in settings.GOOGLE_ANALYTICS.get(
+                'CUSTOM_DATA_PROVIDERS', []):
+            parts = import_str.rsplit('.', 1)
+            if len(parts) == 1:
+                func = globals.get(parts[0], None)
+            else:
+                m = import_module(parts[0])
+                func = getattr(m, parts[1], None)
+            providers.append(func)
+        # store providers on this function so we don't re-load them
+        get_custom_data_providers.providers = providers
+    return get_custom_data_providers.providers
 
 
 def get_account_id(use_ua=False):
@@ -219,6 +238,10 @@ def build_ua_params(request, path=None, event=None, referer=None):
 
     # store campaign tracking parameters in session
     request.session[UA_CAMPAIGN_PARAMS_KEY] = campaign_params
+
+    # get custom dimensions and metrics
+    for provider in get_custom_data_providers():
+        params.update(provider(request))
 
     # add campaign tracking parameters if provided
     params.update(campaign_params)
