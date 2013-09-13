@@ -124,11 +124,7 @@ def get_generic_request_data(request, account, cookie_name,
     cookie = request.COOKIES.get(cookie_name)
     visitor_id = get_visitor_id(request.META.get('HTTP_X_DCMGUID', ''),
                                 account, user_agent, cookie, use_uuid)
-    ip = request.META.get('HTTP_X_FORWARDED_FOR', None)
-    if ip:
-        ip = ip.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
+    ip = request.META.get('REMOTE_ADDR', '')
 
     return {
         'domain': request.META.get('HTTP_HOST', ''),

@@ -68,14 +68,13 @@ class GATestCase(BaseTestCase):
         # this call should be a GET request
         self.assertEqual(Http.request.call_args[0][1].upper(), 'GET')
         # check that all the parameters are in the url
-        params_exist = ['utmsr', 'utme', 'utmvid', 'utmn', 'utmwv']
+        params_exist = ['utmsr', 'utme', 'utmvid', 'utmn', 'utmwv', 'utmip']
         params_equal = {
             'utmhn': self.HEADERS['HTTP_HOST'],
             'utmr': self.HEADERS['HTTP_REFERER'],
             'utmp': self.PATH,
             'utmac': settings.GOOGLE_ANALYTICS['ga_google_analytics_id']
             .replace('UA', 'MO'),
-            'utmip': self.HEADERS['HTTP_X_FORWARDED_FOR'],
         }
         url = Http.request.call_args[0][0]
         for param in params_exist:
@@ -180,5 +179,5 @@ class UATestCase(BaseTestCase):
         ga_url = self.create_gif_url(True)
         self.client.get(ga_url)
         body = Http.request.call_args[1]['body']
-        for key, val in {'cd1': 'CustomValue', 'cm1': 1}.iteritems():
+        for key, val in custom_data(None).iteritems():
             self.assertIn(urlencode({key: val}), body)
