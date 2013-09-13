@@ -37,9 +37,9 @@ class BaseTestCase(TestCase):
         super(BaseTestCase, self).tearDown()
         Http.request = self._request
 
-    def create_gif_url(self):
+    def create_gif_url(self, use_ua=False):
         request = self.factory.get(self.PATH)
-        node = GoogleAnalyticsNode(debug=False)
+        node = GoogleAnalyticsNode(debug=False, use_ua=use_ua)
         url = node.render(context={'request': request})
         # check that path and referer are added to the gif url
         self.assertIn(urlencode({'p': self.PATH}), url)
@@ -75,7 +75,8 @@ class GATestCase(BaseTestCase):
             'utmhn': self.HEADERS['HTTP_HOST'],
             'utmr': self.HEADERS['HTTP_REFERER'],
             'utmp': self.PATH,
-            'utmac': settings.GOOGLE_ANALYTICS['google_analytics_id'],
+            'utmac': settings.GOOGLE_ANALYTICS['google_analytics_id']
+            .replace('UA', 'MO'),
             'utmip': self.HEADERS['HTTP_X_FORWARDED_FOR'],
         }
         url = Http.request.call_args[0][0]
@@ -90,8 +91,11 @@ class GATestCase(BaseTestCase):
 
     def test_cookie(self):
         ga_url = self.create_gif_url()
-        response = self.client.get(ga_url)
-        self.assertIn(utils.GA_COOKIE_NAME, self.client.cookies)
+        self.client.get(ga_url)
+        visitor_id = self.client.cookies[utils.GA_COOKIE_NAME]
+        self.client.get(ga_url)
+        self.assertEqual(self.client.cookies[utils.GA_COOKIE_NAME],
+                         visitor_id)
 
 
 def custom_dimensions(request):
@@ -100,21 +104,8 @@ def custom_dimensions(request):
 
 class UATestCase(BaseTestCase):
 
-    def setUp(self):
-        super(UATestCase, self).setUp()
-        self.settings_context = self.settings(GOOGLE_ANALYTICS={
-            'google_analytics_id': 'UA-00000000-00',
-            'USE_UA': True,
-            'CUSTOM_DATA_PROVIDERS': ('tests.custom_dimensions', ),
-        })
-        self.settings_context.__enter__()
-
-    def tearDown(self):
-        super(UATestCase, self).tearDown()
-        self.settings_context.__exit__(None, None, None)
-
     def test_build_url(self):
-        ua_url = self.create_gif_url()
+        ua_url = self.create_gif_url(True)
         response = self.client.get(ua_url)
         self.assertEqual(response['Content-Type'], 'image/gif')
         self.assertEqual(response.status_code, 200)
@@ -141,9 +132,12 @@ class UATestCase(BaseTestCase):
         self.assertTrue(re.search(r'cid=\w{8}-(\w{4}-){3}\w{12}', body))
 
     def test_cookie(self):
-        ga_url = self.create_gif_url()
-        response = self.client.get(ga_url)
-        self.assertIn(utils.UA_COOKIE_NAME, self.client.cookies)
+        ga_url = self.create_gif_url(True)
+        self.client.get(ga_url)
+        visitor_id = self.client.cookies[utils.UA_COOKIE_NAME]
+        self.client.get(ga_url)
+        self.assertEqual(self.client.cookies[utils.UA_COOKIE_NAME],
+                         visitor_id)
 
     def test_custom_data(self):
         pass

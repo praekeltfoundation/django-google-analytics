@@ -19,6 +19,7 @@ ROOT_URLCONF = 'google_analytics.urls'
 
 GOOGLE_ANALYTICS = {
     'google_analytics_id': 'UA-00000000-00',
+    'CUSTOM_DATA_PROVIDERS': ('tests.custom_dimensions', ),
 }
 
 INSTALLED_APPS = (

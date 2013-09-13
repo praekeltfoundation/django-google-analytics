@@ -3,11 +3,8 @@ import re
 import struct
 
 from django.http import HttpResponse
-from django.conf import settings
 from django.views.decorators.cache import never_cache
-from google_analytics.utils import (build_ga_params,
-                                    build_ua_params,
-                                    set_cookie)
+from google_analytics.utils import (build_params, set_cookie)
 
 
 GIF_DATA = reduce(lambda x, y: x + struct.pack('B', y),
@@ -31,10 +28,7 @@ def get_ip(remote_address):
 
 
 def google_analytics_request(request, response, path=None, event=None):
-    if settings.GOOGLE_ANALYTICS.get('USE_UA', False):
-        params = build_ua_params(request, event=event)
-    else:
-        params = build_ga_params(request, event=event)
+    params = build_params(request, event=event)
 
     set_cookie(params, response)
 

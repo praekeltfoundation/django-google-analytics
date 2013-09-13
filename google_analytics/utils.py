@@ -19,10 +19,13 @@ GA_CAMPAIGN_PARAMS_KEY = 'ga_campaign_params'
 UA_CAMPAIGN_PARAMS_KEY = 'ua_campagin_params'
 
 
-def get_account_id():
+def get_account_id(use_ua=False):
      # get the account id
     try:
-        return settings.GOOGLE_ANALYTICS['google_analytics_id']
+        account_id = settings.GOOGLE_ANALYTICS['google_analytics_id']
+        if use_ua:
+            return 'UA%s' % account_id[2:]
+        return 'MO%s' % account_id[2:]
     except:
         raise Exception("No Google Analytics ID configured")
 
@@ -110,6 +113,12 @@ def get_generic_request_data(request, account, cookie_name,
     }
 
 
+def build_params(request, path=None, event=None, referer=None):
+    if 'ua' in request.GET:
+        return build_ua_params(request, path, event, referer)
+    return build_ga_params(request, path, event, referer)
+
+
 def build_ga_params(request, path=None, event=None, referer=None):
     account = get_account_id()
     generic_data = get_generic_request_data(request, account,
@@ -170,7 +179,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
 
 def build_ua_params(request, path=None, event=None, referer=None):
-    account = get_account_id()
+    account = get_account_id(use_ua=True)
     generic_data = get_generic_request_data(request, account,
                                             UA_COOKIE_NAME,
                                             use_uuid=True, path=path,
