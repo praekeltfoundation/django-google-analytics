@@ -16,11 +16,12 @@ def send_tracking(params, x_forwarded_for=None, timestamp=None):
     request_kwargs = {
         'headers': {
             'User-Agent': user_agent,
-            'Accept-Language': language,
         }
     }
+    if language:
+        request_kwargs['headers']['Accept-Language'] = language
     if x_forwarded_for:
-        request_kwargs['X-Forwarded-For'] = x_forwarded_for
+        request_kwargs['headers']['X-Forwarded-For'] = x_forwarded_for
 
     # if this is a UA event, add
     # the queue time parameter
