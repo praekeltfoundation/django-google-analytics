@@ -1,3 +1,4 @@
+import re
 from httplib2 import Http
 from urllib import urlencode
 
@@ -9,6 +10,7 @@ from mock import patch, Mock
 
 from google_analytics.templatetags.google_analytics_tags \
     import GoogleAnalyticsNode
+from google_analytics import utils
 
 
 class BaseTestCase(TestCase):
@@ -79,8 +81,17 @@ class GATestCase(BaseTestCase):
         url = Http.request.call_args[0][0]
         for param in params_exist:
             self.assertIn(param, url)
+            self.assertNotIn('%s=None' % param, url)
         for param, val in params_equal.iteritems():
             self.assertIn(urlencode({param: val}), url)
+        # check that format of visitor id is correct
+        # 0x0000000000000000
+        self.assertTrue(re.search(r'utmvid=0x\w{16}', url))
+
+    def test_cookie(self):
+        ga_url = self.create_gif_url()
+        response = self.client.get(ga_url)
+        self.assertIn(utils.GA_COOKIE_NAME, self.client.cookies)
 
 
 def custom_dimensions(request):
@@ -110,20 +121,29 @@ class UATestCase(BaseTestCase):
         self.check_ga_request_headers()
         # this call should be a POST request
         self.assertEqual(Http.request.call_args[0][1].upper(), 'POST')
-        # check that all the parameters are in the url
-        params_exist = ['utmsr', 'utme', 'utmvid', 'utmn', 'utmwv']
+        # check that all the parameters are in the body
+        params_exist = ['v', 'z', 'cid']
         params_equal = {
-            'utmhn': self.HEADERS['HTTP_HOST'],
-            'utmr': self.HEADERS['HTTP_REFERER'],
-            'utmp': self.PATH,
-            'utmac': settings.GOOGLE_ANALYTICS['google_analytics_id'],
-            'utmip': self.HEADERS['HTTP_X_FORWARDED_FOR'],
+            'dh': self.HEADERS['HTTP_HOST'],
+            'dr': self.HEADERS['HTTP_REFERER'],
+            'dp': self.PATH,
+            'tid': settings.GOOGLE_ANALYTICS['google_analytics_id'],
+            't': 'pageview',
         }
-        url = Http.request.call_args[0][0]
+        body = Http.request.call_args[1]['body']
         for param in params_exist:
-            self.assertIn(param, url)
+            self.assertIn(param, body)
+            self.assertNotIn('%s=None' % param, body)
         for param, val in params_equal.iteritems():
-            self.assertIn(urlencode({param: val}), url)
+            self.assertIn(urlencode({param: val}), body)
+        # check that format of visitor id is correct
+        # 35009a79-1a05-49d7-b876-2b884d0f825b
+        self.assertTrue(re.search(r'cid=\w{8}-(\w{4}-){3}\w{12}', body))
+
+    def test_cookie(self):
+        ga_url = self.create_gif_url()
+        response = self.client.get(ga_url)
+        self.assertIn(utils.UA_COOKIE_NAME, self.client.cookies)
 
     def test_custom_data(self):
         pass

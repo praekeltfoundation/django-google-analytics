@@ -11,7 +11,8 @@ from google_analytics import (GA_CAMPAIGN_TRACKING_PARAMS,
 
 GA_VERSION = '4.4sh'
 UA_VERSION = '1'
-COOKIE_NAME = '__utmmobile'
+GA_COOKIE_NAME = '__utmmobile'
+UA_COOKIE_NAME = '__uamobile'
 COOKIE_PATH = '/'
 COOKIE_USER_PERSISTENCE = 63072000
 GA_CAMPAIGN_PARAMS_KEY = 'ga_campaign_params'
@@ -26,13 +27,16 @@ def get_account_id():
         raise Exception("No Google Analytics ID configured")
 
 
-def get_visitor_id(guid, account, user_agent, cookie):
+def get_visitor_id(guid, account, user_agent, cookie, use_uuid=False):
     """Generate a visitor id for this hit.
     If there is a visitor id in the cookie, use that, otherwise
     use the guid if we have one, otherwise use a random number.
+    If uuid = True, use a random uuid 4.
     """
     if cookie:
         return cookie
+    if use_uuid:
+        return str(uuid.uuid4())
     message = ""
     if guid:
         # create the visitor id using the guid.
@@ -81,12 +85,13 @@ def set_cookie(params, response):
     return response
 
 
-def get_generic_request_data(request, account, path=None, referer=None):
+def get_generic_request_data(request, account, cookie_name,
+                             use_uuid=False, path=None, referer=None):
     # try and get visitor cookie from the request
     user_agent = request.META.get('HTTP_USER_AGENT', 'Unknown')
-    cookie = request.COOKIES.get(COOKIE_NAME)
+    cookie = request.COOKIES.get(cookie_name)
     visitor_id = get_visitor_id(request.META.get('HTTP_X_DCMGUID', ''),
-                                account, user_agent, cookie)
+                                account, user_agent, cookie, use_uuid)
     ip = request.META.get('HTTP_X_FORWARDED_FOR', None)
     if ip:
         ip = ip.split(',')[0]
@@ -107,7 +112,9 @@ def get_generic_request_data(request, account, path=None, referer=None):
 
 def build_ga_params(request, path=None, event=None, referer=None):
     account = get_account_id()
-    generic_data = get_generic_request_data(request, account, path, referer)
+    generic_data = get_generic_request_data(request, account,
+                                            GA_COOKIE_NAME,
+                                            path=path, referer=referer)
 
     # build the parameter collection
     params = {
@@ -157,14 +164,17 @@ def build_ga_params(request, path=None, event=None, referer=None):
         'language': generic_data['language'],
         'visitor_id': generic_data['visitor_id'],
         'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
-        'COOKIE_NAME': COOKIE_NAME,
+        'COOKIE_NAME': GA_COOKIE_NAME,
         'COOKIE_PATH': COOKIE_PATH,
     }
 
 
 def build_ua_params(request, path=None, event=None, referer=None):
     account = get_account_id()
-    generic_data = get_generic_request_data(request, account, path, referer)
+    generic_data = get_generic_request_data(request, account,
+                                            UA_COOKIE_NAME,
+                                            use_uuid=True, path=path,
+                                            referer=referer)
 
     # build the parameter collection
     params = {
@@ -208,6 +218,6 @@ def build_ua_params(request, path=None, event=None, referer=None):
         'language': generic_data['language'],
         'visitor_id': generic_data['visitor_id'],
         'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
-        'COOKIE_NAME': COOKIE_NAME,
+        'COOKIE_NAME': UA_COOKIE_NAME,
         'COOKIE_PATH': COOKIE_PATH,
     }
