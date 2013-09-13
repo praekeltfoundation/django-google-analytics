@@ -32,7 +32,11 @@ def get_custom_data_providers():
             else:
                 m = import_module(parts[0])
                 func = getattr(m, parts[1], None)
-            providers.append(func)
+            if func:
+                providers.append(func)
+            else:
+                raise ImportError("%s could not be imported"
+                                  % import_str)
         # store providers on this function so we don't re-load them
         get_custom_data_providers.providers = providers
     return get_custom_data_providers.providers

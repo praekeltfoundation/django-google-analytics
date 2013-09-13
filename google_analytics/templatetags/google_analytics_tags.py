@@ -81,6 +81,7 @@ def google_analytics(parser, token):
     bits = token.split_contents()
     # collect parameters if available
     debug = 'False'
+    use_ua = 'False'
     if len(bits) > 1:
         debug = bits[1]
     if len(bits) > 2:
@@ -90,4 +91,4 @@ def google_analytics(parser, token):
     if len(use_ua) > 0:
         use_ua = (use_ua[0].lower() == 't')
     # build and return the node
-    return GoogleAnalyticsNode(debug)
+    return GoogleAnalyticsNode(debug, use_ua)
