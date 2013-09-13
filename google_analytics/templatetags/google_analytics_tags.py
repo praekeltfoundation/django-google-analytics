@@ -36,7 +36,10 @@ class GoogleAnalyticsNode(template.Node):
         # attempt get the request from the context
         request = context.get('request', None)
         if request is None:
-            raise RuntimeError("Request context required")
+            if self.debug:
+                # only raise if in debug mode
+                raise RuntimeError("Request context required")
+            return ''
         # intialise the parameters collection
         params = {}
         if self.use_ua:
