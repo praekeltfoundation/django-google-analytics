@@ -222,7 +222,7 @@ def build_ua_params(request, path=None, event=None, referer=None):
     }
 
     # add event parameters if supplied
-    if event:
+    if type(event) is dict:
         params.update(event)
         params['t'] = 'event'
     else:

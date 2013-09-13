@@ -14,3 +14,10 @@ UA_CAMPAIGN_TRACKING_PARAMS = [
     'cn',
     'ci',
 ]
+
+UA_EVENT_TRACKING_PARAMS = [
+    'ec',
+    'ea',
+    'el',
+    'ev',
+]

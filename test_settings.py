@@ -27,3 +27,5 @@ INSTALLED_APPS = (
     'google_analytics',
     'django.contrib.sessions',
 )
+
+CELERY_ALWAYS_EAGER = True
