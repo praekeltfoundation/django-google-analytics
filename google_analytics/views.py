@@ -1,6 +1,7 @@
 import httplib2
 import re
 import struct
+from sre_constants import error as sre_error
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
@@ -55,10 +56,22 @@ def google_analytics_request(request, response, path=None, event=None):
     # send the request
     http = httplib2.Http()
     try:
-        resp, content = http.request(
-            url, request_method,
-            **request_kwargs
-        )
+        try:
+            resp, content = http.request(
+                url, request_method,
+                **request_kwargs
+            )
+        except sre_error:
+            # some user agents throw an error in re.sub
+            # can only fix the issue by replacing group
+            # references like \2 with /2
+            fixed_ua = request_kwargs['headers']['User-Agent']\
+                .replace('\\', '/')
+            request_kwargs['headers']['User-Agent'] = fixed_ua
+            resp, content = http.request(
+                url, request_method,
+                **request_kwargs
+            )
         # send debug headers if debug mode is set
         if request.GET.get('gadebug', False):
             response['X-GA-MOBILE-URL'] = url

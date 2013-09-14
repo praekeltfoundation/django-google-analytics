@@ -6,7 +6,7 @@ from django.test import TestCase, Client
 from django.conf import settings
 from django.test.client import RequestFactory
 
-from mock import Mock
+from mock import patch, Mock
 
 from google_analytics.templatetags.google_analytics_tags \
     import GoogleAnalyticsNode
@@ -132,6 +132,16 @@ class GATestCase(BaseTestCase):
 
         self.assertEqual(sorted_url(Http.request.call_args_list[0][0][0]),
                          sorted_url(Http.request.call_args_list[1][0][0]))
+
+    def test_raw_user_agent(self):
+        from sre_constants import error
+        # the issue with this string is the r'\\\d+' group references
+        wonky_ua = 'RATECH55_512256_11B_HW (MRE\\2.5.00(3072) resolution\\220176 chipset\\MT6255 touch\\0 tpannel\\0 camera\\1 gsensor\\0 keyboard\\normalWAP Browser/MAUI (HTTP PGDL;HTTPS)) A685_T21_A1_MLA_11B_V4_5_0411 Release/2013.04.11 WAP Browser/MAUI (HTTP PGDL; HTTPS) Profile/Profile/MIDP-2.0 Configuration/CLDC-1.1 Q03C1-2.40 en-US'
+        self.assertRaises(error, re.sub, ' ', wonky_ua, ' ')
+        # not a great fix
+        fixed_ua = wonky_ua.replace('\\', '/')
+        # should not raise an error anymore
+        re.sub(' ', fixed_ua, ' ')
 
 
 def custom_data(request):
