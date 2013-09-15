@@ -42,6 +42,14 @@ def get_custom_data_providers():
     return get_custom_data_providers.providers
 
 
+def heal_headers(headers):
+    # some user agents throw an error in re.sub
+    # can only fix the issue by replacing group
+    # references like \2 with /2
+    fixed_ua = headers['User-Agent'].replace('\\', '/')
+    headers['User-Agent'] = fixed_ua
+
+
 def get_account_id(use_ua=False):
     # if use_ua = True, try ua_google_analytics_id
     # if use_ua = False, try ga_google_analytics_id

@@ -5,7 +5,7 @@ from sre_constants import error as sre_error
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
-from google_analytics.utils import (build_params, set_cookie)
+from google_analytics.utils import (build_params, set_cookie, heal_headers)
 
 
 GIF_DATA = reduce(lambda x, y: x + struct.pack('B', y),
@@ -62,12 +62,7 @@ def google_analytics_request(request, response, path=None, event=None):
                 **request_kwargs
             )
         except sre_error:
-            # some user agents throw an error in re.sub
-            # can only fix the issue by replacing group
-            # references like \2 with /2
-            fixed_ua = request_kwargs['headers']['User-Agent']\
-                .replace('\\', '/')
-            request_kwargs['headers']['User-Agent'] = fixed_ua
+            heal_headers(request_kwargs['headers'])
             resp, content = http.request(
                 url, request_method,
                 **request_kwargs

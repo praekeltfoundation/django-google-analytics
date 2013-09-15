@@ -1,8 +1,10 @@
 import httplib2
+from sre_constants import error as sre_error
 
 from django.utils import timezone
 
 from celery.task import task
+from google_analytics.utils import heal_headers
 
 
 @task(ignore_result=True)
@@ -35,9 +37,16 @@ def send_tracking(params, x_forwarded_for=None, timestamp=None):
     # send the request
     http = httplib2.Http()
     try:
-        resp, content = http.request(
-            url, request_method,
-            **request_kwargs
-        )
+        try:
+            resp, content = http.request(
+                url, request_method,
+                **request_kwargs
+            )
+        except sre_error:
+            heal_headers(request_kwargs['headers'])
+            resp, content = http.request(
+                url, request_method,
+                **request_kwargs
+            )
     except httplib2.HttpLib2Error:
         raise Exception("Error opening: %s" % url)
