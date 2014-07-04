@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.0
+-----
+#. Make compatible with Django 1.6
+
 0.0.5
 -----
 #. Removed Jmbo dependency, renamed.
