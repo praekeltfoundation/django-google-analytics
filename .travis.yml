@@ -10,6 +10,6 @@ install:
   - "pip install -e ."
 script:
   - coverage run --source=google_analytics setup.py test
-  - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' ve/bin/django-admin.py test
+  - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
 after_success:
   - coveralls
