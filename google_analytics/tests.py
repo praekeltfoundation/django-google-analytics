@@ -18,7 +18,7 @@ class GoogleAnalyticsTestCase(TestCase):
             '/google-analytics/?p=%2Fblog&utmdebug=True&r=test.com')
         cookie_2 = str(response.client.cookies.get(COOKIE_NAME))
 
-        self.assertEqual(cookie_1, cookie_2)
+        self.assertEqual(cookie_1[:62], cookie_2[:62])
 
     def test_ga_url(self):
         client = Client()
