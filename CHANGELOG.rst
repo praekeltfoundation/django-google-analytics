@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.0
+-----
+#. Upgrade to GA Measurement Protocol v1
+
 1.0.0
 -----
 #. Make compatible with Django 1.6

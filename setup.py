@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-google-analytics-app',
-    version='1.0.0',
+    version='2.0.0',
     description='Django Google Analytics app allowing for server side/non-js tracking.',
     long_description=open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
     author='Praekelt Foundation',
@@ -20,7 +20,7 @@ setup(
     tests_require=[
         'django-setuptest',
     ],
-    test_suite="setuptest.SetupTestSuite",
+    test_suite="setuptest.setuptest.SetupTestSuite",
     classifiers=[
         "Programming Language :: Python",
         "License :: OSI Approved :: BSD License",
