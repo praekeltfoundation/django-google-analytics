@@ -107,8 +107,8 @@ def build_ga_params(request, path=None, event=None, referer=None):
     params.update(campaign_params)
 
     # construct the gif hit url
-    utm_gif_location = "http://www.google-analytics.com/__utm.gif"
-    utm_url = utm_gif_location + "?" + urllib.urlencode(params)
+    ga_url = "http://www.google-analytics.com/collect"
+    utm_url = ga_url + "?" + urllib.urlencode(params)
 
     return {'utm_url': utm_url,
             'user_agent': user_agent,
