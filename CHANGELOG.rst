@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.1
+-----
+#. Use correct URL for GA Measurement Protocol v1
+
 2.0.0
 -----
 #. Upgrade to GA Measurement Protocol v1
