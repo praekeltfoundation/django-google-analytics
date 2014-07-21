@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.2
+-----
+#. Django 1.6 not required
+
 2.0.1
 -----
 #. Use correct URL for GA Measurement Protocol v1
