@@ -70,6 +70,12 @@ def build_ga_params(request, path=None, event=None, referer=None):
     cookie = request.COOKIES.get(COOKIE_NAME)
     visitor_id = get_visitor_id(meta.get('HTTP_X_DCMGUID', ''), cookie)
 
+    #get client ip address
+    if 'HTTP_X_FORWARDED_FOR' in meta:
+        client_ip = meta.get('HTTP_X_FORWARDED_FOR')
+    else:
+        client_ip = meta.get('REMOTE_ADDR', '')
+
     # build the parameter collection
     params = {
         'v': VERSION,
@@ -80,7 +86,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
         'dp': path,
         'tid': account,
         'cid': visitor_id,
-        'uip': meta.get('REMOTE_ADDR', ''),
+        'uip': client_ip,
     }
 
     # add event parameters if supplied
