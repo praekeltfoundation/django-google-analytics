@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.3
+-----
+#. Use x-forwarded-for for ip address
+
 2.0.2
 -----
 #. Django 1.6 not required
