@@ -70,7 +70,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
     cookie = request.COOKIES.get(COOKIE_NAME)
     visitor_id = get_visitor_id(meta.get('HTTP_X_DCMGUID', ''), cookie)
 
-    #get client ip address
+    # get client ip address
     if 'HTTP_X_FORWARDED_FOR' in meta:
         client_ip = meta.get('HTTP_X_FORWARDED_FOR')
     else:
