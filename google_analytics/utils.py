@@ -72,7 +72,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
     # get client ip address
     if 'HTTP_X_FORWARDED_FOR' in meta:
-        client_ip = meta.get('HTTP_X_FORWARDED_FOR')
+        client_ip = meta.get('HTTP_X_FORWARDED_FOR', '')
     else:
         client_ip = meta.get('REMOTE_ADDR', '')
 
