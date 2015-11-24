@@ -21,16 +21,20 @@ class GoogleAnalyticsNode(template.Node):
         self.debug = debug
 
     def render(self, context):
-        # Trivial case
-        try:
-            assert settings.GOOGLE_ANALYTICS['google_analytics_id']
-        except:
-            return ''
-
         # attempt get the request from the context
         request = context.get('request', None)
         if request is None:
             raise RuntimeError("Request context required")
+
+        try:
+            if 'request_key' in settings.GOOGLE_ANALYTICS:
+                account = getattr(request, settings.GOOGLE_ANALYTICS['request_key'], None)
+            else:
+                account = settings.GOOGLE_ANALYTICS['google_analytics_id']
+            assert account
+        except:
+            return ''
+
         # intialise the parameters collection
         params = {}
         # collect the campaign tracking parameters from the request
