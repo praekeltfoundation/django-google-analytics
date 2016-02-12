@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
+from google_analytics.utils import build_ga_params
 
 
 register = template.Library()
@@ -26,7 +27,6 @@ class GoogleAnalyticsNode(template.Node):
             assert settings.GOOGLE_ANALYTICS['google_analytics_id']
         except:
             return ''
-
         # attempt get the request from the context
         request = context.get('request', None)
         if request is None:
@@ -46,6 +46,7 @@ class GoogleAnalyticsNode(template.Node):
         path = request.path
         parsed_url = urlparse.urlparse(path)
         query = urlparse.parse_qs(parsed_url.query)
+
         for param in params:
             if query.has_key(param):
                 del query[param]
@@ -55,10 +56,11 @@ class GoogleAnalyticsNode(template.Node):
         # append the debug parameter if requested
         if self.debug:
             params['utmdebug'] = 1
+
         # build and return the url
-        url = reverse('google-analytics')
-        if len(params) > 0:
-            url += '?' + urllib.urlencode(params)
+        ga_params = build_ga_params(request)
+        url = reverse('proxy')
+        url += '?' + ga_params['params']
         return url
 
 

@@ -29,7 +29,6 @@ def get_ip(remote_address):
 
 def google_analytics_request(request, response, path=None, event=None):
     params = build_ga_params(request, event=event)
-
     set_cookie(params, response)
 
     utm_url = params.get('utm_url')
@@ -64,5 +63,17 @@ def google_analytics(request):
     if event:
         event = event.split(',')
     response = HttpResponse('', 'image/gif', 200)
+    response.write(GIF_DATA)
+    return google_analytics_request(request, response, event=event)
+
+
+@never_cache
+def proxy(request):
+    """Image that sends data to Google Analytics."""
+    event = request.GET.get('event', None)
+    if event:
+        event = event.split(',')
+    response = HttpResponse('', 'image/gif', 200)
+    print response
     response.write(GIF_DATA)
     return google_analytics_request(request, response, event=event)

@@ -10,4 +10,9 @@ urlpatterns = patterns(
         'google_analytics.views.google_analytics',
         name='google-analytics'
     ),
+    url(
+        r'^proxy$',
+        'google_analytics.views.google_analytics',
+        name='proxy'
+    ),
 )
