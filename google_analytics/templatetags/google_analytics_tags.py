@@ -27,6 +27,7 @@ class GoogleAnalyticsNode(template.Node):
             assert settings.GOOGLE_ANALYTICS['google_analytics_id']
         except:
             return ''
+
         # attempt get the request from the context
         request = context.get('request', None)
         if request is None:
@@ -46,9 +47,8 @@ class GoogleAnalyticsNode(template.Node):
         path = request.path
         parsed_url = urlparse.urlparse(path)
         query = urlparse.parse_qs(parsed_url.query)
-
         for param in params:
-            if query.has_key(param):
+            if param in query:
                 del query[param]
         query = urllib.urlencode(query)
         new_url = parsed_url._replace(query=query)
@@ -56,6 +56,32 @@ class GoogleAnalyticsNode(template.Node):
         # append the debug parameter if requested
         if self.debug:
             params['utmdebug'] = 1
+        # build and return the url
+        url = reverse('google-analytics')
+        if len(params) > 0:
+            url += '?' + urllib.urlencode(params)
+        return url
+
+
+class ProxyGoogleAnalyticsNode(template.Node):
+    """Tag node for building the link to the internal google analytics
+    image.
+
+    """
+
+    def __init__(self, debug):
+        self.debug = debug
+
+    def render(self, context):
+        # Trivial case
+        try:
+            assert settings.GOOGLE_ANALYTICS['google_analytics_id']
+        except:
+            return ''
+        # attempt get the request from the context
+        request = context.get('request', None)
+        if request is None:
+            raise RuntimeError("Request context required")
 
         # build and return the url
         ga_params = build_ga_params(request)
