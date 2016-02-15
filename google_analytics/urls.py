@@ -12,7 +12,7 @@ urlpatterns = patterns(
     ),
     url(
         r'^proxy$',
-        'google_analytics.views.google_analytics',
+        'google_analytics.views.proxy',
         name='proxy'
     ),
 )

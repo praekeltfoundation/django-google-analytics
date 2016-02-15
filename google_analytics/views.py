@@ -70,9 +70,6 @@ def google_analytics(request):
 @never_cache
 def proxy(request):
     """Image that sends data to Google Analytics."""
-    event = request.GET.get('event', None)
-    if event:
-        event = event.split(',')
     response = HttpResponse('', 'image/gif', 200)
     response.write(GIF_DATA)
-    return google_analytics_request(request, response, event=event)
+    return response
