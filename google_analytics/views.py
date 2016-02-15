@@ -74,6 +74,5 @@ def proxy(request):
     if event:
         event = event.split(',')
     response = HttpResponse('', 'image/gif', 200)
-    print response
     response.write(GIF_DATA)
     return google_analytics_request(request, response, event=event)
