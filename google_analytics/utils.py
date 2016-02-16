@@ -49,13 +49,13 @@ def set_cookie(params, response):
 
 def build_ga_params(request, path=None, event=None, referer=None):
     meta = request.META
-    print 'build ga params start'
+
     # get the account id
     try:
         account = settings.GOOGLE_ANALYTICS['google_analytics_id']
     except:
         raise Exception("No Google Analytics ID configured")
-    print 'id set'
+
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
 
@@ -115,6 +115,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?" + urllib.urlencode(params)
+
     return {'utm_url': utm_url,
             'user_agent': user_agent,
             'language': meta.get('HTTP_ACCEPT_LANGUAGE', ''),
@@ -122,5 +123,4 @@ def build_ga_params(request, path=None, event=None, referer=None):
             'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
             'COOKIE_NAME': COOKIE_NAME,
             'COOKIE_PATH': COOKIE_PATH,
-            'params': urllib.urlencode(params),
             }
