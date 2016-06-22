@@ -13,7 +13,3 @@ Unomena
 
 * Euan Jonker
 
-Appazur.com
------------
-
-* Trevor Cox

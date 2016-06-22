@@ -52,15 +52,11 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
     # get the account id
     try:
-        if 'request_key' in settings.GOOGLE_ANALYTICS:
-            account = getattr(request, settings.GOOGLE_ANALYTICS['request_key'], None)
-            if not account: return {}
-        else:
-            account = settings.GOOGLE_ANALYTICS['google_analytics_id']
+        account = settings.GOOGLE_ANALYTICS['google_analytics_id']
     except:
         raise Exception("No Google Analytics ID configured")
 
-    # determine the domain
+    # determine the domian
     domain = meta.get('HTTP_HOST', '')
 
     # determine the referrer
