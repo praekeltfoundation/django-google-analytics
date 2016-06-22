@@ -5,7 +5,7 @@ Praekelt Foundation
 -------------------
 
 * Hedley Roos
-* Milton Tony
+* Milton Madanda
 * Shaun Sephton
 
 Unomena

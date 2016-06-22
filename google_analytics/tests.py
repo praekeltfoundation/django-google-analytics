@@ -191,3 +191,4 @@ class UATestCase(BaseTestCase):
         body = Http.request.call_args[1]['body']
         for key, val in custom_data(None).iteritems():
             self.assertIn(urlencode({key: val}), body)
+

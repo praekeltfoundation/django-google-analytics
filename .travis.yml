@@ -1,0 +1,15 @@
+language: python
+python:
+  - "2.7"
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libtidy-dev python-dev
+  - find . -name '*.pyc' -delete
+install:
+  - "pip install coveralls coverage django-setuptest --use-wheel"
+  - "pip install -e ."
+script:
+  - coverage run --source=google_analytics setup.py test
+  - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
+after_success:
+  - coveralls
