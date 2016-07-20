@@ -116,7 +116,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?" + urllib.urlencode(params)
+    utm_url = ga_url + "?&" + urllib.urlencode(params)
 
     return {'utm_url': utm_url,
             'user_agent': user_agent,
