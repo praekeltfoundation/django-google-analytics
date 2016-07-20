@@ -62,6 +62,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
     # determine the referrer
     referer = referer or request.GET.get('r', '')
 
+    fb_uip = meta.get('HTTP_X_IORG_FBS_UIP')
     # get the path from the referer header
     path = path or request.GET.get('p', '/')
 
@@ -86,7 +87,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
         'dp': path,
         'tid': account,
         'cid': visitor_id,
-        'uip': client_ip,
+        'uip': fb_uip or client_ip,
     }
 
     # add event parameters if supplied
@@ -114,7 +115,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?" + urllib.urlencode(params)
+    utm_url = ga_url + "?&" + urllib.urlencode(params)
 
     return {'utm_url': utm_url,
             'user_agent': user_agent,
