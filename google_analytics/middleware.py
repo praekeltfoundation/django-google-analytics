@@ -6,8 +6,8 @@ from google_analytics.tasks import send_ga_tracking
 class GoogleAnalyticsMiddleware(object):
     def process_response(self, request, response):
         if hasattr(settings, 'GOOGLE_ANALYTICS_IGNORE_PATH'):
-            exclude = [p for p in settings.GOOGLE_ANALYTICS_IGNORE_PATH\
-                        if request.path.startswith(p)]
+            exclude = [p for p in settings.GOOGLE_ANALYTICS_IGNORE_PATH
+                       if request.path.startswith(p)]
             if any(exclude):
                 return response
 
