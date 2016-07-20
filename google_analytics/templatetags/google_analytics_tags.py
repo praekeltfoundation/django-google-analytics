@@ -47,7 +47,7 @@ class GoogleAnalyticsNode(template.Node):
         parsed_url = urlparse.urlparse(path)
         query = urlparse.parse_qs(parsed_url.query)
         for param in params:
-            if query.has_key(param):
+            if param in query:
                 del query[param]
         query = urllib.urlencode(query)
         new_url = parsed_url._replace(query=query)

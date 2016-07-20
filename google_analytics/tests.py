@@ -21,15 +21,13 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(cookie_1[:62], cookie_2[:62])
 
     def test_ga_url(self):
-        client = Client()
+        client = Client(HTTP_X_IORG_FBS_UIP='100.100.200.10')
         response = client.get(
             '/google-analytics/?p=%2Fhome&utmdebug=True&r=test.com')
         ga_url1 = response.get('X-GA-MOBILE-URL')
-
         response = client.get(
             '/google-analytics/?p=%2Fblog&utmdebug=True&r=test.com')
         ga_url2 = response.get('X-GA-MOBILE-URL')
-
         self.assertEqual(
             parse_qs(ga_url1).get('cid'),
             parse_qs(ga_url2).get('cid'))
@@ -38,3 +36,4 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url1).get('dp'), ['/home'])
         self.assertEqual(parse_qs(ga_url2).get('dp'), ['/blog'])
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.10'])

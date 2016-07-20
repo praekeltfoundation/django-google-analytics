@@ -1,2 +1,7 @@
 *.pyc
 *.egg-info
+.coverage
+ve/
+.eggs/
+pep8.txt
+coverage.xml

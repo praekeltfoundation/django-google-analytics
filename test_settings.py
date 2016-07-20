@@ -10,9 +10,9 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites',
-    'django.contrib.sessions',
 
     'google_analytics',
+    'django.contrib.sessions',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -26,9 +26,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+)
+
 STATIC_URL = ''
 SITE_ID = 1
 GOOGLE_ANALYTICS = {
     'google_analytics_id': 'ua-test-id',
 }
 ROOT_URLCONF = 'google_analytics.urls'
+
+CUSTOM_UIP_HEADER = 'HTTP_X_IORG_FBS_UIP'
