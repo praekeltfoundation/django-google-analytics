@@ -25,7 +25,6 @@ class GoogleAnalyticsTestCase(TestCase):
         response = client.get(
             '/google-analytics/?p=%2Fhome&utmdebug=True&r=test.com')
         ga_url1 = response.get('X-GA-MOBILE-URL')
-        print ga_url1
         response = client.get(
             '/google-analytics/?p=%2Fblog&utmdebug=True&r=test.com')
         ga_url2 = response.get('X-GA-MOBILE-URL')
