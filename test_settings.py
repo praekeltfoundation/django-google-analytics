@@ -10,9 +10,9 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites',
-    'django.contrib.sessions',
 
     'google_analytics',
+    'django.contrib.sessions',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -24,6 +24,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
 )
 
 STATIC_URL = ''
