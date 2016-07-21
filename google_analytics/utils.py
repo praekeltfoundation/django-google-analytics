@@ -46,15 +46,8 @@ def set_cookie(params, response):
     return response
 
 
-def build_ga_params(request, path=None, event=None, referer=None):
+def build_ga_params(request, account, path=None, event=None, referer=None):
     meta = request.META
-
-    # get the account id
-    try:
-        account = settings.GOOGLE_ANALYTICS['google_analytics_id']
-    except:
-        raise Exception("No Google Analytics ID configured")
-
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
 

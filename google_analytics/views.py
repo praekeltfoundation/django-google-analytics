@@ -28,7 +28,10 @@ def get_ip(remote_address):
 
 
 def google_analytics_request(request, response, path=None, event=None):
-    params = build_ga_params(request, event=event)
+    # get the account id
+    account = request.GET.get('tracking_code')
+
+    params = build_ga_params(request, account, event=event)
 
     set_cookie(params, response)
 
