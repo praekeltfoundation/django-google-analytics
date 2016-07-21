@@ -1,9 +1,9 @@
 Changelog
 =========
 
-2.0.4
+2.1.0
 -----
-#. Added custom tracking_id
+#. Allow uip to be overriden using custom header
 
 2.0.3
 -----
