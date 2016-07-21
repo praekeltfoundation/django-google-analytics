@@ -6,7 +6,6 @@ import uuid
 from django.conf import settings
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
-
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
 COOKIE_PATH = '/'
@@ -47,21 +46,17 @@ def set_cookie(params, response):
     return response
 
 
-def build_ga_params(request, path=None, event=None, referer=None):
+def build_ga_params(request, account, path=None, event=None, referer=None):
     meta = request.META
-
-    # get the account id
-    try:
-        account = settings.GOOGLE_ANALYTICS['google_analytics_id']
-    except:
-        raise Exception("No Google Analytics ID configured")
-
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
 
+    custom_uip = None
+    if hasattr(settings, 'CUSTOM_UIP_HEADER') and settings.CUSTOM_UIP_HEADER:
+        custom_uip = meta.get(settings.CUSTOM_UIP_HEADER)
     # get the path from the referer header
     path = path or request.GET.get('p', '/')
 
@@ -86,7 +81,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
         'dp': path,
         'tid': account,
         'cid': visitor_id,
-        'uip': client_ip,
+        'uip': custom_uip or client_ip,
     }
 
     # add event parameters if supplied
@@ -114,7 +109,7 @@ def build_ga_params(request, path=None, event=None, referer=None):
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?" + urllib.urlencode(params)
+    utm_url = ga_url + "?&" + urllib.urlencode(params)
 
     return {'utm_url': utm_url,
             'user_agent': user_agent,

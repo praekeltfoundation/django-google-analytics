@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.4
+-----
+#. Added custom tracking_id
+
 2.0.3
 -----
 #. Use x-forwarded-for for ip address
