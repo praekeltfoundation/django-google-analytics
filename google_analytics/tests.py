@@ -14,6 +14,18 @@ from google_analytics.middleware import GoogleAnalyticsMiddleware
 
 class GoogleAnalyticsTestCase(TestCase):
 
+    def make_fake_request(self, url):
+        """
+        We don't have any normal views, so we're creating fake
+        views using django's RequestFactory
+        """
+        rf = RequestFactory()
+        request = rf.get(url)
+        session_middleware = SessionMiddleware()
+        session_middleware.process_request(request)
+        request.session.save()
+        return request
+
     def test_cookies_set_properly(self):
         client = Client()
         response = client.get(
@@ -65,24 +77,12 @@ class GoogleAnalyticsTestCase(TestCase):
     ])
     @responses.activate
     def test_ga_middleware(self):
-        def fake_request(url):
-            """
-            We don't have any normal views, so we're creating fake
-            views using django's RequestFactory
-            """
-            rf = RequestFactory()
-            request = rf.get(url)
-            session_middleware = SessionMiddleware()
-            session_middleware.process_request(request)
-            request.session.save()
-            return request
-
         responses.add(
             responses.GET, 'http://www.google-analytics.com/collect',
             body='',
             status=200)
 
-        request = fake_request('/somewhere/')
+        request = self.make_fake_request('/somewhere/')
 
         middleware = GoogleAnalyticsMiddleware()
         response = middleware.process_response(request, HttpResponse())
@@ -93,6 +93,17 @@ class GoogleAnalyticsTestCase(TestCase):
             'http://www.google-analytics.com/collect?&'
             'uip=127.0.0.1&cid={0}&'
             't=pageview&dh=&v=1&tid=ua-test-id').format(uid)))
+
+    @override_settings(MIDDLEWARE_CLASSES=[
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'google_analytics.middleware.GoogleAnalyticsMiddleware'
+    ], GOOGLE_ANALYTICS_IGNORE_PATH=['/ignore-this/'])
+    def test_ga_middleware_ignore_path(self):
+        request = self.make_fake_request('/ignore-this/somewhere/')
+        middleware = GoogleAnalyticsMiddleware()
+        middleware.process_response(request, HttpResponse())
+
+        self.assertEqual(len(responses.calls), 0)
 
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
