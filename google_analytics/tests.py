@@ -1,14 +1,14 @@
-from django.test import TestCase
+import responses
+
+from django.test import TestCase, override_settings
 from django.test.client import Client
 from google_analytics.utils import COOKIE_NAME
 from urlparse import parse_qs
-from google_analytics.templatetags.google_analytics_tags import google_analytics
+from google_analytics.templatetags.google_analytics_tags import google_analytics # noqa
 from django.test.client import RequestFactory
 
 
 class GoogleAnalyticsTestCase(TestCase):
-    def SetUp(self):
-        pass
 
     def test_cookies_set_properly(self):
         client = Client()
@@ -54,3 +54,39 @@ class GoogleAnalyticsTestCase(TestCase):
             {'request': post_request},
             tracking_code='ua-test-id', debug=False)
         self.assertEqual(parse_qs(url).get('utmdebug'), None)
+
+    @override_settings(MIDDLEWARE_CLASSES=[
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'google_analytics.middleware.GoogleAnalyticsMiddleware'
+    ])
+    @responses.activate
+    def test_ga_middleware(self):
+        responses.add(
+            responses.GET, 'http://www.google-analytics.com/collect',
+            body='',
+            status=200)
+
+        client = Client()
+        response = client.get('/google-analytics/?p=%2Fhome&r=test.com')
+        uid = response.client.cookies.get(COOKIE_NAME).value
+
+        self.assertEqual(len(responses.calls), 1)
+        self.assertTrue(responses.calls[0].request.url.startswith((
+            'http://www.google-analytics.com/collect?&'
+            'uip=127.0.0.1&cid={0}&'
+            't=pageview&dh=&v=1&tid=ua-test-id').format(uid)))
+
+    @override_settings(MIDDLEWARE_CLASSES=[
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'google_analytics.middleware.GoogleAnalyticsMiddleware'
+    ], GOOGLE_ANALYTICS=None)
+    @responses.activate
+    def test_ga_middleware_no_account_set(self):
+        responses.add(
+            responses.GET, 'http://www.google-analytics.com/collect',
+            body='',
+            status=200)
+
+        client = Client()
+        with self.assertRaises(Exception):
+            client.get('/google-analytics/?p=%2Fhome&r=test.com')
