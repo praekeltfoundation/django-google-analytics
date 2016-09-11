@@ -11,9 +11,15 @@ class GoogleAnalyticsMiddleware(object):
             if any(exclude):
                 return response
 
+        # get the account id
+        try:
+            account = settings.GOOGLE_ANALYTICS['google_analytics_id']
+        except:
+            raise Exception("No Google Analytics ID configured")
+
         path = request.path
         referer = request.META.get('HTTP_REFERER', '')
-        params = build_ga_params(request, path=path, referer=referer)
+        params = build_ga_params(request, account, path=path, referer=referer)
         response = set_cookie(params, response)
         send_ga_tracking.delay(params)
         return response
