@@ -30,6 +30,4 @@ ROOT_URLCONF = 'google_analytics.urls'
 
 CUSTOM_UIP_HEADER = 'HTTP_X_IORG_FBS_UIP'
 
-CELERY_RESULT_BACKEND = BROKER_URL = 'django://'
-CELERY_ALWAYS_EAGER = True
 TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'

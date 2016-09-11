@@ -1,11 +1,15 @@
 import responses
 
+from django.http import HttpResponse
 from django.test import TestCase, override_settings
 from django.test.client import Client
+from django.test.client import RequestFactory
+from django.contrib.sessions.middleware import SessionMiddleware
+
 from google_analytics.utils import COOKIE_NAME
 from urlparse import parse_qs
 from google_analytics.templatetags.google_analytics_tags import google_analytics # noqa
-from django.test.client import RequestFactory
+from google_analytics.middleware import GoogleAnalyticsMiddleware
 
 
 class GoogleAnalyticsTestCase(TestCase):
@@ -61,14 +65,28 @@ class GoogleAnalyticsTestCase(TestCase):
     ])
     @responses.activate
     def test_ga_middleware(self):
+        def fake_request(url):
+            """
+            We don't have any normal views, so we're creating fake
+            views using django's RequestFactory
+            """
+            rf = RequestFactory()
+            request = rf.get(url)
+            session_middleware = SessionMiddleware()
+            session_middleware.process_request(request)
+            request.session.save()
+            return request
+
         responses.add(
             responses.GET, 'http://www.google-analytics.com/collect',
             body='',
             status=200)
 
-        client = Client()
-        response = client.get('/google-analytics/?p=%2Fhome&r=test.com')
-        uid = response.client.cookies.get(COOKIE_NAME).value
+        request = fake_request('/somewhere/')
+
+        middleware = GoogleAnalyticsMiddleware()
+        response = middleware.process_response(request, HttpResponse())
+        uid = response.cookies.get(COOKIE_NAME).value
 
         self.assertEqual(len(responses.calls), 1)
         self.assertTrue(responses.calls[0].request.url.startswith((
@@ -80,13 +98,7 @@ class GoogleAnalyticsTestCase(TestCase):
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS=None)
-    @responses.activate
     def test_ga_middleware_no_account_set(self):
-        responses.add(
-            responses.GET, 'http://www.google-analytics.com/collect',
-            body='',
-            status=200)
-
         client = Client()
         with self.assertRaises(Exception):
             client.get('/google-analytics/?p=%2Fhome&r=test.com')
