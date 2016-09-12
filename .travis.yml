@@ -12,3 +12,11 @@ script:
   - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
 after_success:
   - coveralls
+deploy:
+  provider: pypi
+  user: Praekelt
+  password:
+    secure: TiFroqbYLiZWJHQxr4lFnHoZhPSrCq9D4UuEXVBMMvSBh0jlp3FPP35IMjqfltyeUjOXEdnrMGR8GJV0/5iqlwR/y7AQEjBV6XvOq7RHuKdyJuagB/zqCZt4NomS91QpquKO3AnyKEQdRCBJ2AZPnGcZ8gHSqUx1n/SaqOF/Abs=
+  on:
+    tags: true
+    all_branches: true
