@@ -1,4 +1,4 @@
-import httplib2
+import requests
 import re
 import struct
 
@@ -38,25 +38,22 @@ def google_analytics_request(request, response, path=None, event=None):
     utm_url = params.get('utm_url')
     user_agent = params.get('user_agent')
     language = params.get('language')
-    # send the request
-    http = httplib2.Http()
-    try:
-        resp, content = http.request(
-            utm_url, 'GET',
-            headers={
-                'User-Agent': user_agent,
-                'Accepts-Language': language
-            }
-        )
-        # send debug headers if debug mode is set
-        if request.GET.get('utmdebug', False):
-            response['X-GA-MOBILE-URL'] = utm_url
-            response['X-GA-RESPONSE'] = resp
 
-        # return the augmented response
-        return response
-    except httplib2.HttpLib2Error:
-        raise Exception("Error opening: %s" % utm_url)
+    # send the request
+    resp = requests.get(
+        utm_url,
+        headers={
+            'User-Agent': user_agent,
+            'Accepts-Language': language
+        }
+    )
+    # send debug headers if debug mode is set
+    if request.GET.get('utmdebug', False):
+        response['X-GA-MOBILE-URL'] = utm_url
+        response['X-GA-RESPONSE'] = resp
+
+    # return the augmented response
+    return response
 
 
 @never_cache
