@@ -15,6 +15,7 @@ setup(
         'django<1.10',
         'django-celery',
         'requests',
+        'beautifulsoup4',
     ],
     include_package_data=True,
     tests_require=[

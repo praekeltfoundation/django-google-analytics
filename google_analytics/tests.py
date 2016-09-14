@@ -14,13 +14,13 @@ from google_analytics.middleware import GoogleAnalyticsMiddleware
 
 class GoogleAnalyticsTestCase(TestCase):
 
-    def make_fake_request(self, url):
+    def make_fake_request(self, url, headers={}):
         """
         We don't have any normal views, so we're creating fake
         views using django's RequestFactory
         """
         rf = RequestFactory()
-        request = rf.get(url)
+        request = rf.get(url, **headers)
         session_middleware = SessionMiddleware()
         session_middleware.process_request(request)
         request.session.save()
@@ -82,17 +82,24 @@ class GoogleAnalyticsTestCase(TestCase):
             body='',
             status=200)
 
-        request = self.make_fake_request('/somewhere/')
+        headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
+        request = self.make_fake_request('/somewhere/', headers)
 
         middleware = GoogleAnalyticsMiddleware()
-        response = middleware.process_response(request, HttpResponse())
+        html = "<html><head><title>Hello World</title></head></html>"
+        response = middleware.process_response(request, HttpResponse(html))
         uid = response.cookies.get(COOKIE_NAME).value
 
         self.assertEqual(len(responses.calls), 1)
-        self.assertTrue(responses.calls[0].request.url.startswith((
-            'http://www.google-analytics.com/collect?&'
-            'uip=127.0.0.1&cid={0}&'
-            't=pageview&dh=&v=1&tid=ua-test-id').format(uid)))
+
+        ga_url = responses.calls[0].request.url
+
+        self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
+        self.assertEqual(parse_qs(ga_url).get('dp'), ['/somewhere/'])
+        self.assertEqual(parse_qs(ga_url).get('dt'), ['Hello World'])
+        self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
+        self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
+        self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
 
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
