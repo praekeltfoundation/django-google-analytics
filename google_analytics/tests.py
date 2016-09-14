@@ -104,6 +104,35 @@ class GoogleAnalyticsTestCase(TestCase):
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
+    ])
+    @responses.activate
+    def test_ga_middleware_no_title(self):
+        responses.add(
+            responses.GET, 'http://www.google-analytics.com/collect',
+            body='',
+            status=200)
+
+        headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
+        request = self.make_fake_request('/somewhere/', headers)
+
+        middleware = GoogleAnalyticsMiddleware()
+        response = middleware.process_response(request, HttpResponse())
+        uid = response.cookies.get(COOKIE_NAME).value
+
+        self.assertEqual(len(responses.calls), 1)
+
+        ga_url = responses.calls[0].request.url
+
+        self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
+        self.assertEqual(parse_qs(ga_url).get('dp'), ['/somewhere/'])
+        self.assertEqual(parse_qs(ga_url).get('dt'), None)
+        self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
+        self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
+        self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
+
+    @override_settings(MIDDLEWARE_CLASSES=[
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS_IGNORE_PATH=['/ignore-this/'])
     def test_ga_middleware_ignore_path(self):
         request = self.make_fake_request('/ignore-this/somewhere/')
