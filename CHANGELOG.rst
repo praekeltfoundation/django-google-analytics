@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.2
+-----
+#. ensure we fill in the page title if it's available
+
 2.1.1
 -----
 #. bug - build_ga_params expects account to be supplied
