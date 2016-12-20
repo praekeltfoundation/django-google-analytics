@@ -14,6 +14,7 @@ setup(
     install_requires=[
         'django<1.10',
         'django-celery',
+        'celery<4.0',
         'requests',
         'beautifulsoup4',
     ],

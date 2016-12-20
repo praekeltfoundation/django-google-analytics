@@ -7,13 +7,14 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sites',
-
-    'djcelery',
-    'google_analytics',
     'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'google_analytics',
+    'djcelery',
     'kombu.transport.django',
 ]
 
