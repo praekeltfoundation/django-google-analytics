@@ -1,4 +1,5 @@
 import responses
+import pytest
 
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
@@ -12,6 +13,7 @@ from google_analytics.templatetags.google_analytics_tags import google_analytics
 from google_analytics.middleware import GoogleAnalyticsMiddleware
 
 
+@pytest.mark.celery(task_always_eager=True)
 class GoogleAnalyticsTestCase(TestCase):
 
     def make_fake_request(self, url, headers={}):
@@ -71,10 +73,13 @@ class GoogleAnalyticsTestCase(TestCase):
             tracking_code='ua-test-id', debug=False)
         self.assertEqual(parse_qs(url).get('utmdebug'), None)
 
-    @override_settings(MIDDLEWARE_CLASSES=[
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'google_analytics.middleware.GoogleAnalyticsMiddleware'
-    ])
+    @override_settings(
+        MIDDLEWARE_CLASSES=[
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'google_analytics.middleware.GoogleAnalyticsMiddleware'
+        ],
+        TASK_ALWAYS_EAGER=True,
+        BROKER_URL='memory://')
     @responses.activate
     def test_ga_middleware(self):
         responses.add(

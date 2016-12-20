@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.3
+-----
+#. fix header name for Accepts-Language in tasks.py
+
 2.1.2
 -----
 #. ensure we fill in the page title if it's available
