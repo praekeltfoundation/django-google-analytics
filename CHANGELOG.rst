@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.4
+-----
+#. get language from request utils.py
+
 2.1.3
 -----
 #. fix header name for Accepts-Language in tasks.py
