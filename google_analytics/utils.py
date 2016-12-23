@@ -8,8 +8,6 @@ from django.utils.translation import get_language_from_request
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
-from molo.core.utils import get_locale_code
-
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
 COOKIE_PATH = '/'
@@ -118,11 +116,11 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urllib.urlencode(params)
-    locale = get_locale_code(get_language_from_request(request))
+    locale = get_language_from_request(request)
     
     return {'utm_url': utm_url,
             'user_agent': user_agent,
-            'language': locale,
+            'language': locale or settings.LANGUAGE_CODE,
             'visitor_id': visitor_id,
             'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
             'COOKIE_NAME': COOKIE_NAME,
