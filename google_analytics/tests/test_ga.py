@@ -103,7 +103,8 @@ class GoogleAnalyticsTestCase(TestCase):
         ga_url = responses.calls[0].request.url
 
         self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
-        self.assertEqual(parse_qs(ga_url).get('dp'), ['/somewhere/'])
+        self.assertEqual(parse_qs(ga_url).get('dp'),
+                         ['/sections/deep-soul/%D9%85%D8%A7/'])
         self.assertEqual(parse_qs(ga_url).get('dt'),
                          ['ما-مدى-جاهزيتك-للإنترنت'])
         self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
