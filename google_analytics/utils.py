@@ -80,7 +80,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
         'dh': domain,
         'sr': '',
         'dr': referer,
-        'dp': path.encode('utf-8'),
+        'dp': urllib.quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
@@ -88,7 +88,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
 
     # add page title if supplied
     if title:
-        params.update({'dt': title.encode('utf-8')})
+        params.update({'dt': urllib.quote(title.encode('utf-8'))})
 
     # add event parameters if supplied
     if event:
