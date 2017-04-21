@@ -88,7 +88,8 @@ class GoogleAnalyticsTestCase(TestCase):
             status=200)
 
         headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
-        request = self.make_fake_request('/somewhere/', headers)
+        request = self.make_fake_request('/sections/deep-soul/%D9%85%D8%A7/',
+                                         headers)
 
         middleware = GoogleAnalyticsMiddleware()
         html = "<html><head><title>Hello World</title></head></html>"
@@ -101,7 +102,8 @@ class GoogleAnalyticsTestCase(TestCase):
 
         self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
         self.assertEqual(parse_qs(ga_url).get('dp'), ['/somewhere/'])
-        self.assertEqual(parse_qs(ga_url).get('dt'), ['Hello World'])
+        self.assertEqual(parse_qs(ga_url).get('dt'),
+                         ['ما-مدى-جاهزيتك-للإنترنت'])
         self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
