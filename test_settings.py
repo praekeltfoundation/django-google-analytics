@@ -22,6 +22,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
+DEBUG = True
 STATIC_URL = ''
 SITE_ID = 1
 GOOGLE_ANALYTICS = {
