@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import responses
 import pytest
 
@@ -88,10 +90,11 @@ class GoogleAnalyticsTestCase(TestCase):
             status=200)
 
         headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
-        request = self.make_fake_request('/somewhere/', headers)
+        request = self.make_fake_request(
+            '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
 
         middleware = GoogleAnalyticsMiddleware()
-        html = "<html><head><title>Hello World</title></head></html>"
+        html = "<html><head><title>ما-مدى-جاهزيتك-للإنترنت</title></head></html>"
         response = middleware.process_response(request, HttpResponse(html))
         uid = response.cookies.get(COOKIE_NAME).value
 
@@ -100,8 +103,14 @@ class GoogleAnalyticsTestCase(TestCase):
         ga_url = responses.calls[0].request.url
 
         self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
-        self.assertEqual(parse_qs(ga_url).get('dp'), ['/somewhere/'])
-        self.assertEqual(parse_qs(ga_url).get('dt'), ['Hello World'])
+        self.assertEqual(
+            parse_qs(ga_url).get('dp'), [
+                '/sections/deep-soul/%D9%85%D8%A7-%D9%85%D8%AF%D9%89-'
+                '%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8%AA%D9%83-%D9%84%D9'
+                '%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA/'])
+        self.assertEqual(parse_qs(ga_url).get('dt'), [
+            '%D9%85%D8%A7-%D9%85%D8%AF%D9%89-%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8'
+            '%AA%D9%83-%D9%84%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA'])
         self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
