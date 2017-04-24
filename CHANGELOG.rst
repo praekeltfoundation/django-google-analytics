@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.5
+-----
+#. Fix encoding in URL
+
 2.1.4
 -----
 #. get language from request utils.py
