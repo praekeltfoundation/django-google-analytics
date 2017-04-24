@@ -1,13 +1,13 @@
+sudo: false
 language: python
 python:
   - "2.7"
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libtidy-dev python-dev
-  - find . -name '*.pyc' -delete
+cache:
+  directories:
+    - $HOME/.pip-cache/
 install:
-  - "pip install coveralls coverage django-setuptest responses --use-wheel"
-  - "pip install -e ."
+  - pip install coveralls coverage django-setuptest responses --use-wheel --cache-dir $HOME/.pip-cache/
+  - pip install -e . --cache-dir $HOME/.pip-cache/
 script:
   - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
 after_success:

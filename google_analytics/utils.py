@@ -80,7 +80,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
         'dh': domain,
         'sr': '',
         'dr': referer,
-        'dp': path,
+        'dp': urllib.quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
@@ -88,7 +88,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
 
     # add page title if supplied
     if title:
-        params.update({'dt': title})
+        params.update({'dt': urllib.quote(title.encode('utf-8'))})
 
     # add event parameters if supplied
     if event:
@@ -117,7 +117,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urllib.urlencode(params)
     locale = get_language_from_request(request)
-    
+
     return {'utm_url': utm_url,
             'user_agent': user_agent,
             'language': locale or settings.LANGUAGE_CODE,
