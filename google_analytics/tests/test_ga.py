@@ -9,7 +9,7 @@ from django.test.client import Client
 from django.test.client import RequestFactory
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from google_analytics.utils import COOKIE_NAME
+from google_analytics.utils import COOKIE_NAME, build_ga_params
 from urlparse import parse_qs
 from google_analytics.templatetags.google_analytics_tags import google_analytics # noqa
 from google_analytics.middleware import GoogleAnalyticsMiddleware
@@ -94,7 +94,8 @@ class GoogleAnalyticsTestCase(TestCase):
             '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
 
         middleware = GoogleAnalyticsMiddleware()
-        html = "<html><head><title>ما-مدى-جاهزيتك-للإنترنت</title></head></html>"
+        html = ("<html><head><title>"
+                "ما-مدى-جاهزيتك-للإنترنت</title></head></html>")
         response = middleware.process_response(request, HttpResponse(html))
         uid = response.cookies.get(COOKIE_NAME).value
 
@@ -114,6 +115,37 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
+
+    @override_settings(
+        MIDDLEWARE_CLASSES=[
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'google_analytics.middleware.GoogleAnalyticsMiddleware'
+        ],
+        TASK_ALWAYS_EAGER=True,
+        BROKER_URL='memory://')
+    @responses.activate
+    def test_build_ga_params_for_title_encoding(self):
+        responses.add(
+            responses.GET, 'http://www.google-analytics.com/collect',
+            body='',
+            status=200)
+
+        headers = {
+            'HTTP_X_IORG_FBS_UIP': '100.100.200.10',
+            'HTTP_X_DCMGUID': '0000-0000-0000-0000'}
+        request = self.make_fake_request(
+            '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
+
+        middleware = GoogleAnalyticsMiddleware()
+        html = "<html><head><title>title</title></head></html>"
+        response = middleware.process_response(request, HttpResponse(html))
+
+        ga_dict = build_ga_params(
+            request, response, 'ua-test-id', '/some/path/',
+            referer='/some/path/', title='ما-مدى-جاهزيتك-للإنترنت')
+        self.assertEqual(parse_qs(ga_dict.get('utm_url')).get('dt'), [
+            '%D9%85%D8%A7-%D9%85%D8%AF%D9%89-%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8'
+            '%AA%D9%83-%D9%84%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA'])
 
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',

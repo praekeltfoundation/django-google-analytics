@@ -88,8 +88,8 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
 
     # add page title if supplied
     if title:
-        params.update({'dt': urllib.quote(title.encode('utf-8'))})
-
+        u_title = title.decode('utf-8') if isinstance(title, str) else title
+        params.update({'dt': urllib.quote(unicode(u_title).encode('utf-8'))})
     # add event parameters if supplied
     if event:
         params.update({
