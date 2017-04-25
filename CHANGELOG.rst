@@ -1,5 +1,8 @@
 Changelog
 =========
+2.1.6
+-----
+#. Fix encoding for title
 
 2.1.5
 -----
