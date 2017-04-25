@@ -143,10 +143,9 @@ class GoogleAnalyticsTestCase(TestCase):
         ga_dict = build_ga_params(
             request, response, 'ua-test-id', '/some/path/',
             referer='/some/path/', title='ما-مدى-جاهزيتك-للإنترنت')
-        self.assertTrue(ga_dict.get('utm_url').startswith(
-            'http://www.google-analytics.com/collect?&utme=5%28%2F%2As%2Ao%2A'
-            'm%2Ae%2A%2F%2Ap%2Aa%2At%2Ah%2A%2F%29&dh=&cid=0000-0000-0000-0000'
-            '&sr=&uip=100.100.200.1d0'))
+        self.assertEqual(parse_qs(ga_dict.get('utm_url')).get('dt'), [
+            '%D9%85%D8%A7-%D9%85%D8%AF%D9%89-%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8'
+            '%AA%D9%83-%D9%84%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA'])
 
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
