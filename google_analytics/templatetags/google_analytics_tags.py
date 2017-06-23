@@ -1,11 +1,8 @@
-import urllib
-import urlparse
-
 from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
-
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
+from six.moves import urllib
 
 
 register = template.Library()
@@ -35,12 +32,12 @@ def google_analytics(context, tracking_code=None, debug=False):
         params['r'] = referer
     # remove collected parameters from the path and pass it on
     path = request.path
-    parsed_url = urlparse.urlparse(path)
-    query = urlparse.parse_qs(parsed_url.query)
+    parsed_url = urllib.parse.urlparse(path)
+    query = urllib.parse.parse_qs(parsed_url.query)
     for param in params:
         if param in query:
             del query[param]
-    query = urllib.urlencode(query)
+    query = urllib.parse.urlencode(query)
     new_url = parsed_url._replace(query=query)
     params['p'] = new_url.geturl()
     params['tracking_code'] = tracking_code or settings.GOOGLE_ANALYTICS[
@@ -51,5 +48,5 @@ def google_analytics(context, tracking_code=None, debug=False):
     # build and return the url
     url = reverse('google-analytics')
     if len(params) > 0:
-        url += '?&' + urllib.urlencode(params)
+        url += '?&' + urllib.parse.urlencode(params)
     return url

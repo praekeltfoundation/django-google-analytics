@@ -1,12 +1,16 @@
 import random
+import sys
 import time
-import urllib
 import uuid
 
 from django.conf import settings
 from django.utils.translation import get_language_from_request
+from six.moves import urllib
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
+
+if sys.version_info[0] == 3:
+    unicode = str
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
@@ -48,7 +52,8 @@ def set_cookie(params, response):
     return response
 
 
-def build_ga_params(request, account, path=None, event=None, referer=None, title=None):
+def build_ga_params(
+        request, account, path=None, event=None, referer=None, title=None):
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
@@ -80,7 +85,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
         'dh': domain,
         'sr': '',
         'dr': referer,
-        'dp': urllib.quote(path.encode('utf-8')),
+        'dp': urllib.parse.quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
@@ -88,8 +93,9 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
 
     # add page title if supplied
     if title:
-        u_title = title.decode('utf-8') if isinstance(title, str) else title
-        params.update({'dt': urllib.quote(unicode(u_title).encode('utf-8'))})
+        u_title = title.decode('utf-8') if isinstance(title, bytes) else title
+        params.update(
+            {'dt': urllib.parse.quote(unicode(u_title).encode('utf-8'))})
     # add event parameters if supplied
     if event:
         params.update({
@@ -115,7 +121,7 @@ def build_ga_params(request, account, path=None, event=None, referer=None, title
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?&" + urllib.urlencode(params)
+    utm_url = ga_url + "?&" + urllib.parse.urlencode(params)
     locale = get_language_from_request(request)
 
     return {'utm_url': utm_url,
