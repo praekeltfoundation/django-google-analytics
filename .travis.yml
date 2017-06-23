@@ -20,6 +20,7 @@ deploy:
   user: Praekelt
   password:
     secure: O0feip8iJtd8Pulu2m9qcAg2yqwBUe5FsvYSaWTJke8a9oiS4xGittATKqbxUZNvFjHpbS79V2032IPDs+oNePwotSavPiKeSF1xNxAaeGuEH7nFuaYQ4/RzLpHHYU3KT61sa32U+bdH3AoDvAb/5MzlLucTVGLEuCUpHXLhcx0=
+  distributions: sdist bdist_wheel
   on:
     tags: true
     all_branches: true
