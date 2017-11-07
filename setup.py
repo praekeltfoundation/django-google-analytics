@@ -12,7 +12,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django<1.10',
+        'django<1.11',
         'django-celery',
         'celery<4.0',
         'requests',
