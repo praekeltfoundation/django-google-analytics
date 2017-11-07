@@ -1,10 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns(
+urlpatterns = [
     '',
     url(
         r'^google-analytics/$',
         'google_analytics.views.google_analytics',
         name='google-analytics'
     ),
-)
+]
