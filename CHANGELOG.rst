@@ -1,5 +1,10 @@
 Changelog
 =========
+
+3.0.0
+-----
+#. Now only supports Django 1.10
+
 2.1.6
 -----
 #. Fix encoding for title
