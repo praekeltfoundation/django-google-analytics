@@ -8,7 +8,7 @@ Django Google Analytics
 Installation
 ------------
 
-#. Install or add ``django-google-analytics`` to your Python path.
+#. Install ``django-google-analytics-app`` from PyPI or add to your Python path some other way.
 #. Add ``google_analytics`` to you ``INSTALLED_APPS`` setting.
 #. Add URL include to your project's ``urls.py`` file::
 

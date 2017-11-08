@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-google-analytics-app',
-    version='2.1.6',
+    version='3.0.0',
     description='Django Google Analytics app allowing for server side/non-js tracking.',
     long_description=open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
     author='Praekelt Foundation',
@@ -12,7 +12,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django<1.10',
+        'django<1.11',
         'django-celery',
         'celery<4.0',
         'requests',
