@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'kombu.transport.django',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
