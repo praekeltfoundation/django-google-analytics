@@ -5,6 +5,10 @@ from setuptools import setup, find_packages
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
+DJANGO_VERSION = 'django<1.11'
+
+if os.getenv('TRAVIS') == 'true':
+    DJANGO_VERSION = os.getenv('DJANGO_VERSION', DJANGO_VERSION)
 
 
 def read(*parts):
@@ -24,7 +28,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django<1.11',
+        DJANGO_VERSION,
         'django-celery',
         'celery<4.0',
         'requests',
