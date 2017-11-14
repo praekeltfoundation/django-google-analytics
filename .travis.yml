@@ -8,6 +8,7 @@ install:
   - pip install coveralls
 script:
   - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
+  - flake8
 after_success:
   - coveralls
 deploy:

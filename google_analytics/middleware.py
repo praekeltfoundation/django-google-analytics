@@ -15,13 +15,13 @@ class GoogleAnalyticsMiddleware(object):
         # get the account id
         try:
             account = settings.GOOGLE_ANALYTICS['google_analytics_id']
-        except:
+        except (KeyError, TypeError):
             raise Exception("No Google Analytics ID configured")
 
         try:
             title = BeautifulSoup(
                 response.content, "html.parser").html.head.title.text
-        except:
+        except AttributeError:
             title = None
 
         path = request.path
