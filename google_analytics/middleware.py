@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.utils.deprecation import MiddlewareMixin
 from google_analytics.utils import build_ga_params, set_cookie
 from google_analytics.tasks import send_ga_tracking
 
 
-class GoogleAnalyticsMiddleware(object):
+class GoogleAnalyticsMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         if hasattr(settings, 'GOOGLE_ANALYTICS_IGNORE_PATH'):
             exclude = [p for p in settings.GOOGLE_ANALYTICS_IGNORE_PATH
