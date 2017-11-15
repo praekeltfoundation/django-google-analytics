@@ -1,11 +1,23 @@
+import codecs
+import os
+
 from setuptools import setup, find_packages
+
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*parts):
+    with codecs.open(os.path.join(HERE, *parts), 'rb', 'utf-8') as f:
+        return f.read()
 
 
 setup(
     name='django-google-analytics-app',
     version='3.0.0',
-    description='Django Google Analytics app allowing for server side/non-js tracking.',
-    long_description=open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
+    description=('Django Google Analytics app allowing for server side/non-js '
+                 'tracking.'),
+    long_description=read('README.rst'),
     author='Praekelt Foundation',
     author_email='dev@praekelt.com',
     license='BSD',

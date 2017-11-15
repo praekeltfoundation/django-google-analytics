@@ -16,7 +16,7 @@ def google_analytics(context, tracking_code=None, debug=False):
     if not tracking_code:
         try:
             assert settings.GOOGLE_ANALYTICS['google_analytics_id']
-        except:
+        except KeyError:
             return ''
     # attempt get the request from the context
     request = context.get('request', None)

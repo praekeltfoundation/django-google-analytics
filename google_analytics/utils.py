@@ -48,7 +48,8 @@ def set_cookie(params, response):
     return response
 
 
-def build_ga_params(request, account, path=None, event=None, referer=None, title=None):
+def build_ga_params(
+        request, account, path=None, event=None, referer=None, title=None):
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
