@@ -36,3 +36,5 @@ TEMPLATES = [{
 }]
 
 TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+
+CELERY_ALWAYS_EAGER = True

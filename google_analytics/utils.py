@@ -1,12 +1,14 @@
 import random
 import time
-import urllib
 import uuid
 
 from django.conf import settings
 from django.utils.translation import get_language_from_request
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
+
+from six import text_type
+from six.moves.urllib.parse import quote, urlencode
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
@@ -81,7 +83,7 @@ def build_ga_params(
         'dh': domain,
         'sr': '',
         'dr': referer,
-        'dp': urllib.quote(path.encode('utf-8')),
+        'dp': quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
@@ -89,8 +91,8 @@ def build_ga_params(
 
     # add page title if supplied
     if title:
-        u_title = title.decode('utf-8') if isinstance(title, str) else title
-        params.update({'dt': urllib.quote(unicode(u_title).encode('utf-8'))})
+        u_title = title.decode('utf-8') if isinstance(title, bytes) else title
+        params.update({'dt': quote(text_type(u_title).encode('utf-8'))})
     # add event parameters if supplied
     if event:
         params.update({
@@ -116,7 +118,7 @@ def build_ga_params(
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?&" + urllib.urlencode(params)
+    utm_url = ga_url + "?&" + urlencode(params)
     locale = get_language_from_request(request)
 
     return {'utm_url': utm_url,
