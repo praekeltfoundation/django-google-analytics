@@ -31,4 +31,8 @@ ROOT_URLCONF = 'google_analytics.urls'
 
 CUSTOM_UIP_HEADER = 'HTTP_X_IORG_FBS_UIP'
 
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+}]
+
 TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
