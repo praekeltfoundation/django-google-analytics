@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+----------
+#. Add support for Python 3
+
 3.0.0
 -----
 #. Now only supports Django 1.10
