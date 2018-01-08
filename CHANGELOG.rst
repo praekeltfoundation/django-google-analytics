@@ -1,6 +1,10 @@
 Changelog
 =========
 
+4.0.0
+-----
+#. Supports Django 1.11
+
 3.0.0
 -----
 #. Now only supports Django 1.10
