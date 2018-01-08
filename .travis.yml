@@ -2,14 +2,13 @@ sudo: false
 language: python
 python:
   - "2.7"
-cache:
-  directories:
-    - $HOME/.pip-cache/
+cache: pip
 install:
-  - pip install coveralls coverage django-setuptest responses --use-wheel --cache-dir $HOME/.pip-cache/
-  - pip install -e . --cache-dir $HOME/.pip-cache/
+  - pip install -r requirements-dev.txt
+  - pip install coveralls
 script:
   - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' `which django-admin.py` test
+  - flake8
 after_success:
   - coveralls
 deploy:
