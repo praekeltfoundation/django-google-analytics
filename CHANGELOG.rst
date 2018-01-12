@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Unreleased
+4.1.0
 ----------
 #. Add support for Python 3
 
