@@ -1,5 +1,5 @@
 from django import template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.conf import settings
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
