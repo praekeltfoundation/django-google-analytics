@@ -145,6 +145,21 @@ class GoogleAnalyticsTestCase(TestCase):
             '%D9%85%D8%A7-%D9%85%D8%AF%D9%89-%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8'
             '%AA%D9%83-%D9%84%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA'])
 
+    @responses.activate
+    def test_build_ga_params_for_user_id(self):
+        request = self.make_fake_request('/somewhere/')
+
+        ga_dict_without_uid = build_ga_params(
+            request, 'ua-test-id', '/some/path/',)
+
+        ga_dict_with_uid = build_ga_params(
+            request, 'ua-test-id', '/some/path/', user_id='402-3a6')
+
+        self.assertEqual(
+            parse_qs(ga_dict_without_uid.get('utm_url')).get('uid'), None)
+        self.assertEqual(
+            parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
+
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
