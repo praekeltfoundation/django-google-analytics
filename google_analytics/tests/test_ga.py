@@ -172,7 +172,7 @@ class GoogleAnalyticsTestCase(TestCase):
             custom_params={'key': 'value'})
 
         self.assertEqual(
-            parse_qs(ga_dict_without_custom.get('utm_url')).get('uid'), None)
+            parse_qs(ga_dict_without_custom.get('utm_url')).get('key'), None)
         self.assertEqual(
             parse_qs(ga_dict_with_custom.get('utm_url')).get('key'), ['value'])
 
