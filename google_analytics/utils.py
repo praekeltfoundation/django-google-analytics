@@ -52,7 +52,7 @@ def set_cookie(params, response):
 
 def build_ga_params(
         request, account, path=None, event=None, referer=None, title=None,
-        user_id=None,):
+        user_id=None, custom_params={}):
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
@@ -93,6 +93,9 @@ def build_ga_params(
     # add user ID if exists
     if user_id:
         params.update({'uid': user_id})
+
+    # add custom parameters
+    params.update(custom_params)
 
     # add page title if supplied
     if title:

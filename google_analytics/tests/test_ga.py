@@ -160,6 +160,22 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(
             parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
 
+    @responses.activate
+    def test_build_ga_params_for_custom_params(self):
+        request = self.make_fake_request('/somewhere/')
+
+        ga_dict_without_custom = build_ga_params(
+            request, 'ua-test-id', '/some/path/',)
+
+        ga_dict_with_custom = build_ga_params(
+            request, 'ua-test-id', '/some/path/',
+            custom_params={'key': 'value'})
+
+        self.assertEqual(
+            parse_qs(ga_dict_without_custom.get('utm_url')).get('key'), None)
+        self.assertEqual(
+            parse_qs(ga_dict_with_custom.get('utm_url')).get('key'), ['value'])
+
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
