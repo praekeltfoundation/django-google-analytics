@@ -1,6 +1,10 @@
 Changelog
 =========
 
+4.3.0
+----------
+#. Add custom parameters to build_ga_params
+
 4.2.0
 ----------
 #. Add uid to GA params

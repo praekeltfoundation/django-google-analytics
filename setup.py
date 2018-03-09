@@ -14,7 +14,7 @@ def read(*parts):
 
 setup(
     name='django-google-analytics-app',
-    version='4.2.0',
+    version='4.3.0',
     description=('Django Google Analytics app allowing for server side/non-js '
                  'tracking.'),
     long_description=read('README.rst'),
