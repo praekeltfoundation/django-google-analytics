@@ -5,9 +5,11 @@ import uuid
 
 from django.conf import settings
 from django.utils.translation import get_language_from_request
-from six.moves import urllib
 
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
+
+from six import text_type
+from six.moves.urllib.parse import quote, urlencode
 
 if sys.version_info[0] == 3:
     unicode = str
@@ -53,7 +55,8 @@ def set_cookie(params, response):
 
 
 def build_ga_params(
-        request, account, path=None, event=None, referer=None, title=None):
+        request, account, path=None, event=None, referer=None, title=None,
+        user_id=None, custom_params={}):
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
@@ -85,17 +88,23 @@ def build_ga_params(
         'dh': domain,
         'sr': '',
         'dr': referer,
-        'dp': urllib.parse.quote(path.encode('utf-8')),
+        'dp': quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
     }
 
+    # add user ID if exists
+    if user_id:
+        params.update({'uid': user_id})
+
+    # add custom parameters
+    params.update(custom_params)
+
     # add page title if supplied
     if title:
         u_title = title.decode('utf-8') if isinstance(title, bytes) else title
-        params.update(
-            {'dt': urllib.parse.quote(unicode(u_title).encode('utf-8'))})
+        params.update({'dt': quote(text_type(u_title).encode('utf-8'))})
     # add event parameters if supplied
     if event:
         params.update({
@@ -121,7 +130,7 @@ def build_ga_params(
 
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
-    utm_url = ga_url + "?&" + urllib.parse.urlencode(params)
+    utm_url = ga_url + "?&" + urlencode(params)
     locale = get_language_from_request(request)
 
     return {'utm_url': utm_url,

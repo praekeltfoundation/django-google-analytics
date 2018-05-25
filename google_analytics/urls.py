@@ -1,13 +1,7 @@
-try:
-    from django.conf.urls import patterns, url
-except ImportError:
-    from django.conf.urls.defaults import patterns, url
+from django.conf.urls import url
+from google_analytics.views import google_analytics
 
-urlpatterns = patterns(
-    '',
-    url(
-        r'^google-analytics/$',
-        'google_analytics.views.google_analytics',
-        name='google-analytics'
-    ),
-)
+
+urlpatterns = [
+    url(r'^google-analytics/$', google_analytics, name='google-analytics'),
+]

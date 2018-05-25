@@ -11,19 +11,27 @@ def read(*parts):
         return f.read()
 
 
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*parts):
+    with codecs.open(os.path.join(HERE, *parts), 'rb', 'utf-8') as f:
+        return f.read()
+
+
 setup(
     name='django-google-analytics-app',
-    version='2.1.6',
+    version='4.3.0',
     description=('Django Google Analytics app allowing for server side/non-js '
                  'tracking.'),
     long_description=read('README.rst'),
     author='Praekelt.org',
-    author_email='dev@praekelt.org',
+    author_email='dev@praekelt.com',
     license='BSD',
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django<1.10',
+        'django<2.0',
         'django-celery',
         'celery<4.0',
         'requests',

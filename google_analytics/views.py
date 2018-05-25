@@ -5,6 +5,7 @@ from functools import reduce
 import requests
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
+from functools import reduce
 from google_analytics.utils import build_ga_params, set_cookie
 
 
