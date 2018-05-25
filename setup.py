@@ -11,14 +11,6 @@ def read(*parts):
         return f.read()
 
 
-HERE = os.path.abspath(os.path.dirname(__file__))
-
-
-def read(*parts):
-    with codecs.open(os.path.join(HERE, *parts), 'rb', 'utf-8') as f:
-        return f.read()
-
-
 setup(
     name='django-google-analytics-app',
     version='4.3.0',
