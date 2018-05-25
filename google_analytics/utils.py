@@ -1,5 +1,4 @@
 import random
-import sys
 import time
 import uuid
 
@@ -10,9 +9,6 @@ from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six import text_type
 from six.moves.urllib.parse import quote, urlencode
-
-if sys.version_info[0] == 3:
-    unicode = str
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
