@@ -18,7 +18,7 @@ setup(
                  'tracking.'),
     long_description=read('README.rst'),
     author='Praekelt.org',
-    author_email='dev@praekelt.com',
+    author_email='dev@praekelt.org',
     license='BSD',
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
