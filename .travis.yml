@@ -1,10 +1,6 @@
 sudo: false
 language: python
-python:
-  - '2.7'
-  - '3.4'
-  - '3.5'
-  - '3.6'
+
 cache: pip
 before_install:
   - pip install --upgrade pip
@@ -16,12 +12,24 @@ script:
   - flake8
 after_success:
   - coveralls
-deploy:
-  provider: pypi
-  user: Praekelt
-  password:
-    secure: O0feip8iJtd8Pulu2m9qcAg2yqwBUe5FsvYSaWTJke8a9oiS4xGittATKqbxUZNvFjHpbS79V2032IPDs+oNePwotSavPiKeSF1xNxAaeGuEH7nFuaYQ4/RzLpHHYU3KT61sa32U+bdH3AoDvAb/5MzlLucTVGLEuCUpHXLhcx0=
-  distributions: sdist bdist_wheel
-  on:
-    tags: true
-    all_branches: true
+
+jobs:
+  include:
+    - python: '2.7'
+    - python: '3.4'
+    - python: '3.5'
+    - python: '3.6'
+
+    - stage: release
+      python: '3.6'
+      if: tag IS present
+      deploy:
+        provider: pypi
+        user: Praekelt
+        password:
+          secure: O0feip8iJtd8Pulu2m9qcAg2yqwBUe5FsvYSaWTJke8a9oiS4xGittATKqbxUZNvFjHpbS79V2032IPDs+oNePwotSavPiKeSF1xNxAaeGuEH7nFuaYQ4/RzLpHHYU3KT61sa32U+bdH3AoDvAb/5MzlLucTVGLEuCUpHXLhcx0=
+        distributions: sdist bdist_wheel
+        on: {tags: true}
+
+      install: skip
+      script: skip
