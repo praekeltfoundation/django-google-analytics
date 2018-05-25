@@ -3,7 +3,6 @@ import os
 
 from setuptools import setup, find_packages
 
-
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -18,8 +17,8 @@ setup(
     description=('Django Google Analytics app allowing for server side/non-js '
                  'tracking.'),
     long_description=read('README.rst'),
-    author='Praekelt Foundation',
-    author_email='dev@praekelt.com',
+    author='Praekelt.org',
+    author_email='dev@praekelt.org',
     license='BSD',
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
@@ -29,21 +28,22 @@ setup(
         'celery<4.0',
         'requests',
         'beautifulsoup4',
-        'six>=1.11.0,<2.0',
+        'six',
     ],
     include_package_data=True,
-    tests_require=[
-        'django-setuptest',
-    ],
-    test_suite="setuptest.setuptest.SetupTestSuite",
     classifiers=[
-        "Programming Language :: Python",
-        "License :: OSI Approved :: BSD License",
-        "Development Status :: 4 - Beta",
-        "Operating System :: OS Independent",
-        "Framework :: Django",
-        "Intended Audience :: Developers",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        'Development Status :: 4 - Beta',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     zip_safe=False,
 )

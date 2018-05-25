@@ -1,5 +1,5 @@
 -e .
 coverage
 django-setuptest
-flake8==3.5.0
+flake8
 responses

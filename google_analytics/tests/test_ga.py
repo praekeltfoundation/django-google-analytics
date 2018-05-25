@@ -9,9 +9,10 @@ from django.test.client import RequestFactory
 from django.contrib.sessions.middleware import SessionMiddleware
 
 from google_analytics.utils import COOKIE_NAME, build_ga_params
-from six.moves.urllib.parse import parse_qs
 from google_analytics.templatetags.google_analytics_tags import google_analytics # noqa
 from google_analytics.middleware import GoogleAnalyticsMiddleware
+
+from six.moves.urllib.parse import parse_qs
 
 
 class GoogleAnalyticsTestCase(TestCase):
