@@ -1,6 +1,7 @@
 import random
 import time
 import uuid
+import structlog
 
 from django.conf import settings
 from django.utils.translation import get_language_from_request
@@ -127,6 +128,10 @@ def build_ga_params(
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urlencode(params)
+    if settings.ENABLE_GA_LOGGING and params:
+        log = structlog.get_logger()
+        log.msg(utm_url, user_agent=user_agent)
+
     locale = get_language_from_request(request)
 
     return {'utm_url': utm_url,
