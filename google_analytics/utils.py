@@ -128,9 +128,10 @@ def build_ga_params(
     # construct the gif hit url
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urlencode(params)
-    if settings.ENABLE_GA_LOGGING and params:
-        log = structlog.get_logger()
-        log.msg(utm_url, user_agent=user_agent)
+    if hasattr(settings, 'ENABLE_GA_LOGGING'):
+        if settings.ENABLE_GA_LOGGING:
+            log = structlog.get_logger()
+            log.msg(utm_url, user_agent=user_agent)
 
     locale = get_language_from_request(request)
 
