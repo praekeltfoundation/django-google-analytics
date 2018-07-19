@@ -1,5 +1,29 @@
 Changelog
 =========
+4.3.1
+----------
+#. Enable GA logging setting
+
+4.3.0
+----------
+#. Add custom parameters to build_ga_params
+
+4.2.0
+----------
+#. Add uid to GA params
+
+4.1.0
+----------
+#. Add support for Python 3
+
+4.0.0
+-----
+#. Supports Django 1.11
+
+3.0.0
+-----
+#. Now only supports Django 1.10
+
 2.1.6
 -----
 #. Fix encoding for title

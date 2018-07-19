@@ -1,36 +1,50 @@
+import codecs
+import os
+
 from setuptools import setup, find_packages
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*parts):
+    with codecs.open(os.path.join(HERE, *parts), 'rb', 'utf-8') as f:
+        return f.read()
 
 
 setup(
     name='django-google-analytics-app',
-    version='2.1.6',
-    description='Django Google Analytics app allowing for server side/non-js tracking.',
-    long_description=open('README.rst', 'r').read() + open('AUTHORS.rst', 'r').read() + open('CHANGELOG.rst', 'r').read(),
-    author='Praekelt Foundation',
-    author_email='dev@praekelt.com',
+    version='4.3.1',
+    description=('Django Google Analytics app allowing for server side/non-js '
+                 'tracking.'),
+    long_description=read('README.rst'),
+    author='Praekelt.org',
+    author_email='dev@praekelt.org',
     license='BSD',
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django<1.10',
+        'django<2.0',
         'django-celery',
         'celery<4.0',
         'requests',
         'beautifulsoup4',
+        'six',
+        'structlog',
     ],
     include_package_data=True,
-    tests_require=[
-        'django-setuptest',
-    ],
-    test_suite="setuptest.setuptest.SetupTestSuite",
     classifiers=[
-        "Programming Language :: Python",
-        "License :: OSI Approved :: BSD License",
-        "Development Status :: 4 - Beta",
-        "Operating System :: OS Independent",
-        "Framework :: Django",
-        "Intended Audience :: Developers",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        'Development Status :: 4 - Beta',
+        'Framework :: Django',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     zip_safe=False,
 )

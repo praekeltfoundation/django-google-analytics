@@ -1,0 +1,6 @@
+-e .
+coverage
+django-setuptest
+flake8
+responses
+structlog
