@@ -29,6 +29,7 @@ setup(
         'requests',
         'beautifulsoup4',
         'six',
+        'structlog',
     ],
     include_package_data=True,
     classifiers=[

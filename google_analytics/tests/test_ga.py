@@ -162,6 +162,33 @@ class GoogleAnalyticsTestCase(TestCase):
             parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
 
     @responses.activate
+    @override_settings(
+        ENABLE_GA_LOGGING=True)
+    def test_ga_logging_enabled(self):
+        request = self.make_fake_request('/somewhere/')
+        ga_with_logging = build_ga_params(
+            request,
+            'ua-test-id',
+            '/some/path/',
+            user_id='402-3a6',
+        )
+        self.assertEqual(True, ga_with_logging['ga_logging_enabled'])
+
+    @responses.activate
+    @override_settings(
+        ENABLE_GA_LOGGING=False)
+    def test_ga_logging_disabled(self):
+        request = self.make_fake_request('/somewhere/')
+        ga_with_logging = build_ga_params(
+            request,
+            'ua-test-id',
+            '/some/path/',
+            user_id='402-3a6',
+        )
+
+        self.assertEqual(False, ga_with_logging['ga_logging_enabled'])
+
+    @responses.activate
     def test_build_ga_params_for_custom_params(self):
         request = self.make_fake_request('/somewhere/')
 
