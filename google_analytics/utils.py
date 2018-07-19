@@ -144,5 +144,5 @@ def build_ga_params(
             'COOKIE_USER_PERSISTENCE': COOKIE_USER_PERSISTENCE,
             'COOKIE_NAME': COOKIE_NAME,
             'COOKIE_PATH': COOKIE_PATH,
-            'ga_logging_enabled': tracker_enabled
+            'ga_logging_enabled': ga_logging_enabled
             }
