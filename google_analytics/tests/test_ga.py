@@ -14,9 +14,6 @@ from google_analytics.middleware import GoogleAnalyticsMiddleware
 
 from six.moves.urllib.parse import parse_qs
 
-from django.conf import settings
-from structlog import ReturnLogger
-
 
 class GoogleAnalyticsTestCase(TestCase):
 
@@ -182,12 +179,12 @@ class GoogleAnalyticsTestCase(TestCase):
         ENABLE_GA_LOGGING=False)
     def test_ga_logging_disabled(self):
         request = self.make_fake_request('/somewhere/')
-        ga_with_logging = ReturnLogger().msg(build_ga_params(
+        ga_with_logging = build_ga_params(
             request,
             'ua-test-id',
             '/some/path/',
             user_id='402-3a6',
-        ))
+        )
 
         self.assertEqual(False, ga_with_logging['tracker_enabled'])
 
