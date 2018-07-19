@@ -172,7 +172,7 @@ class GoogleAnalyticsTestCase(TestCase):
             '/some/path/',
             user_id='402-3a6',
         )
-        self.assertEqual(True, ga_with_logging['tracker_enabled'])
+        self.assertEqual(True, ga_with_logging['ga_logging_enabled'])
 
     @responses.activate
     @override_settings(
@@ -186,7 +186,7 @@ class GoogleAnalyticsTestCase(TestCase):
             user_id='402-3a6',
         )
 
-        self.assertEqual(False, ga_with_logging['tracker_enabled'])
+        self.assertEqual(False, ga_with_logging['ga_logging_enabled'])
 
     @responses.activate
     def test_build_ga_params_for_custom_params(self):
