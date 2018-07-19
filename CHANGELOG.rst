@@ -1,5 +1,8 @@
 Changelog
 =========
+4.3.1
+----------
+#. Enable GA logging setting
 
 4.3.0
 ----------
