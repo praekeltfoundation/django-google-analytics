@@ -1,5 +1,9 @@
 Changelog
 =========
+4.3.3
+----------
+#.Add user agent for GA logging
+
 4.3.2
 ----------
 #.Add leading text for GA logging
