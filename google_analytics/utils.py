@@ -132,7 +132,7 @@ def build_ga_params(
     if hasattr(settings, 'ENABLE_GA_LOGGING'):
         if settings.ENABLE_GA_LOGGING:
             log = structlog.get_logger()
-            log.msg('GA_URL: %s' % utm_url)
+            log.msg('GA_URL: %s' % utm_url, user_agent=user_agent)
             ga_logging_enabled = True
 
     locale = get_language_from_request(request)
