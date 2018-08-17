@@ -1,5 +1,9 @@
 Changelog
 =========
+4.3.4
+----------
+#.Remove dr from URL logging
+
 4.3.3
 ----------
 #.Add user agent for GA logging
