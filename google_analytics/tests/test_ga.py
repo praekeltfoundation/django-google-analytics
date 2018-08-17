@@ -61,18 +61,6 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.10'])
 
-        def test_ga_url_self_referal(self):
-        client = Client(HTTP_X_IORG_FBS_UIP='100.100.200.10')
-        response = client.get(
-            '/google-analytics/?p=%2Fhome&utmdebug='
-            'True&r=test.com&tracking_code=ua-test-id')
-        ga_url1 = response.get('X-GA-MOBILE-URL')
-        response = client.get(
-            '/google-analytics/?p=%2Fblog&utmdebug='
-            'True&r=test.com&tracking_code=ua-test-id')
-        ga_url2 = response.get('X-GA-MOBILE-URL')
-        self.assertEqual(parse_qs(ga_url1).get('dr'), ['test.com'])
-
     def test_ga_template_tag(self):
         rf = RequestFactory()
         post_request = rf.post('/submit/', {'foo': 'bar'})

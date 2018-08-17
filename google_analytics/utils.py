@@ -84,7 +84,7 @@ def build_ga_params(
         'z': str(random.randint(0, 0x7fffffff)),
         'dh': domain,
         'sr': '',
-        'dr': '',
+        'dr': referer,
         'dp': quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
