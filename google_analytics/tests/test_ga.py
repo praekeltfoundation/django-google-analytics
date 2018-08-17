@@ -55,7 +55,7 @@ class GoogleAnalyticsTestCase(TestCase):
             parse_qs(ga_url1).get('cid'),
             parse_qs(ga_url2).get('cid'))
         self.assertEqual(parse_qs(ga_url1).get('t'), ['pageview'])
-        self.assertEqual(parse_qs(ga_url1).get('dr'), ['test.com'])
+        self.assertEqual(parse_qs(ga_url1).get('dr'), [''])
         self.assertEqual(parse_qs(ga_url1).get('dp'), ['/home'])
         self.assertEqual(parse_qs(ga_url2).get('dp'), ['/blog'])
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
