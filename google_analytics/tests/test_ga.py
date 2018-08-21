@@ -150,16 +150,16 @@ class GoogleAnalyticsTestCase(TestCase):
     def test_build_ga_params_for_user_id(self):
         request = self.make_fake_request('/somewhere/')
 
-        ga_dict_without_dr = build_ga_params(
+        ga_dict_without_uid = build_ga_params(
             request, 'ua-test-id', '/some/path/',)
 
-        ga_dict_with_dr = build_ga_params(
+        ga_dict_with_uid = build_ga_params(
             request, 'ua-test-id', '/some/path/', user_id='402-3a6')
 
         self.assertEqual(
-            parse_qs(ga_dict_without_dr.get('utm_url')).get('uid'), None)
+            parse_qs(ga_dict_without_uid.get('utm_url')).get('uid'), None)
         self.assertEqual(
-            parse_qs(ga_dict_with_dr.get('utm_url')).get('uid'), ['402-3a6'])
+            parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
 
     @responses.activate
     def test_build_ga_params_for_direct_referals(self):
