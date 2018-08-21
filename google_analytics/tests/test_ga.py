@@ -178,12 +178,12 @@ class GoogleAnalyticsTestCase(TestCase):
         # None: if referal is not set
         self.assertEqual(
             parse_qs(ga_dict_without_referal.get('utm_url')).get('dr'), None)
-        # Exlcude referals from the same host
+        # Include referals from another host
         self.assertEqual(
             parse_qs(
                 ga_dict_without_direct_referal.get('utm_url')).get('dr'),
             ['http://test.com/some/path/'])
-        # include referals from another host
+        # Exlcude referals from the same host
         self.assertEqual(
             parse_qs(
                 ga_dict_with_direct_referal.get('utm_url')).get('dr'),
