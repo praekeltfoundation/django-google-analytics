@@ -169,11 +169,11 @@ class GoogleAnalyticsTestCase(TestCase):
             request, 'ua-test-id', '/some/path/',)
         ga_dict_without_direct_referal = build_ga_params(
             request, 'ua-test-id', '/some/path/',
-            referer='test.com')
+            referer='localhost:8000/some/other/path/')
 
         ga_dict_with_direct_referal = build_ga_params(
             request, 'ua-test-id', '/some/path/',
-            referer='notest.com')
+            referer='localhost:8000/some/other/path/')
 
         # None: if referal is not set
         self.assertEqual(
@@ -183,12 +183,12 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(
             parse_qs(
                 ga_dict_without_direct_referal.get('utm_url')).get('dr'),
-            None)
+            ['localhost:8000/some/other/path/'])
         # include referals from another host
         self.assertEqual(
             parse_qs(
                 ga_dict_with_direct_referal.get('utm_url')).get('dr'),
-            ['notest.com'])
+            ['localhost:8000/some/other/path/'])
 
     @responses.activate
     @override_settings(
