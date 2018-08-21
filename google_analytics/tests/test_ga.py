@@ -55,7 +55,7 @@ class GoogleAnalyticsTestCase(TestCase):
             parse_qs(ga_url1).get('cid'),
             parse_qs(ga_url2).get('cid'))
         self.assertEqual(parse_qs(ga_url1).get('t'), ['pageview'])
-        self.assertEqual(parse_qs(ga_url1).get('dr'), ['_'])
+        self.assertEqual(parse_qs(ga_url1).get('dr'), ['test.com'])
         self.assertEqual(parse_qs(ga_url1).get('dp'), ['/home'])
         self.assertEqual(parse_qs(ga_url2).get('dp'), ['/blog'])
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
@@ -150,16 +150,45 @@ class GoogleAnalyticsTestCase(TestCase):
     def test_build_ga_params_for_user_id(self):
         request = self.make_fake_request('/somewhere/')
 
-        ga_dict_without_uid = build_ga_params(
+        ga_dict_without_dr = build_ga_params(
             request, 'ua-test-id', '/some/path/',)
 
-        ga_dict_with_uid = build_ga_params(
+        ga_dict_with_dr = build_ga_params(
             request, 'ua-test-id', '/some/path/', user_id='402-3a6')
 
         self.assertEqual(
-            parse_qs(ga_dict_without_uid.get('utm_url')).get('uid'), None)
+            parse_qs(ga_dict_without_dr.get('utm_url')).get('uid'), None)
         self.assertEqual(
-            parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
+            parse_qs(ga_dict_with_dr.get('utm_url')).get('uid'), ['402-3a6'])
+
+    @responses.activate
+    def test_build_ga_params_for_direct_referals(self):
+        headers = {'HTTP_HOST': 'test.com'}
+        request = self.make_fake_request('/somewhere/', headers)
+        ga_dict_without_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',)
+        ga_dict_without_direct_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',
+            referer='test.com')
+
+        ga_dict_with_direct_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',
+            referer='notest.com')
+
+        # None: if referal is not set
+        self.assertEqual(
+            parse_qs(ga_dict_without_referal.get('utm_url')).get('dr'), None)
+
+        # Exlcude referals from the same host
+        self.assertEqual(
+            parse_qs(
+                ga_dict_without_direct_referal.get('utm_url')).get('dr'),
+            None)
+        # include referals from another host
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_direct_referal.get('utm_url')).get('dr'),
+            ['notest.com'])
 
     @responses.activate
     @override_settings(
