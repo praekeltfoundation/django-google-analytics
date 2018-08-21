@@ -10,7 +10,10 @@ from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six import text_type
 from six.moves.urllib.parse import quote, urlencode
-from urllib.parse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
