@@ -60,6 +60,8 @@ def build_ga_params(
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
+    if referer == domain:
+        referer = ''
 
     custom_uip = None
     if hasattr(settings, 'CUSTOM_UIP_HEADER') and settings.CUSTOM_UIP_HEADER:
@@ -84,7 +86,7 @@ def build_ga_params(
         'z': str(random.randint(0, 0x7fffffff)),
         'dh': domain,
         'sr': '',
-        'dr': '_',
+        'dr': referer,
         'dp': quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
