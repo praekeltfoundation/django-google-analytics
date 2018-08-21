@@ -163,32 +163,31 @@ class GoogleAnalyticsTestCase(TestCase):
 
     @responses.activate
     def test_build_ga_params_for_direct_referals(self):
-        headers = {'HTTP_HOST': 'test.com'}
+        headers = {'HTTP_HOST': 'localhost:8000'}
         request = self.make_fake_request('/somewhere/', headers)
         ga_dict_without_referal = build_ga_params(
             request, 'ua-test-id', '/some/path/',)
         ga_dict_without_direct_referal = build_ga_params(
             request, 'ua-test-id', '/some/path/',
-            referer='localhost:8000/some/other/path/')
+            referer='http://test.com/some/path/')
 
         ga_dict_with_direct_referal = build_ga_params(
             request, 'ua-test-id', '/some/path/',
-            referer='localhost:8000/some/other/path/')
+            referer='http://localhost:8000/some/path/')
 
         # None: if referal is not set
         self.assertEqual(
             parse_qs(ga_dict_without_referal.get('utm_url')).get('dr'), None)
-
         # Exlcude referals from the same host
         self.assertEqual(
             parse_qs(
                 ga_dict_without_direct_referal.get('utm_url')).get('dr'),
-            ['localhost:8000/some/other/path/'])
+            ['http://test.com/some/path/'])
         # include referals from another host
         self.assertEqual(
             parse_qs(
                 ga_dict_with_direct_referal.get('utm_url')).get('dr'),
-            ['localhost:8000/some/other/path/'])
+            ['/some/path/'])
 
     @responses.activate
     @override_settings(
