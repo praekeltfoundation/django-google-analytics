@@ -10,6 +10,7 @@ from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six import text_type
 from six.moves.urllib.parse import quote, urlencode
+from urllib.parse import urlparse
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
@@ -60,8 +61,9 @@ def build_ga_params(
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
-    if referer == domain:
-        referer = ''
+    parse_referer = urlparse(referer)
+    if parse_referer.netloc == domain:
+        referer = parse_referer.path
 
     custom_uip = None
     if hasattr(settings, 'CUSTOM_UIP_HEADER') and settings.CUSTOM_UIP_HEADER:
