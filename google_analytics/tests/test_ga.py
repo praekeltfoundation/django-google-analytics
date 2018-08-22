@@ -55,7 +55,7 @@ class GoogleAnalyticsTestCase(TestCase):
             parse_qs(ga_url1).get('cid'),
             parse_qs(ga_url2).get('cid'))
         self.assertEqual(parse_qs(ga_url1).get('t'), ['pageview'])
-        self.assertEqual(parse_qs(ga_url1).get('dr'), ['_'])
+        self.assertEqual(parse_qs(ga_url1).get('dr'), ['test.com'])
         self.assertEqual(parse_qs(ga_url1).get('dp'), ['/home'])
         self.assertEqual(parse_qs(ga_url2).get('dp'), ['/blog'])
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
@@ -160,6 +160,34 @@ class GoogleAnalyticsTestCase(TestCase):
             parse_qs(ga_dict_without_uid.get('utm_url')).get('uid'), None)
         self.assertEqual(
             parse_qs(ga_dict_with_uid.get('utm_url')).get('uid'), ['402-3a6'])
+
+    @responses.activate
+    def test_build_ga_params_for_direct_referals(self):
+        headers = {'HTTP_HOST': 'localhost:8000'}
+        request = self.make_fake_request('/somewhere/', headers)
+        ga_dict_without_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',)
+        ga_dict_without_direct_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',
+            referer='http://test.com/some/path/')
+
+        ga_dict_with_direct_referal = build_ga_params(
+            request, 'ua-test-id', '/some/path/',
+            referer='http://localhost:8000/some/path/')
+
+        # None: if referal is not set
+        self.assertEqual(
+            parse_qs(ga_dict_without_referal.get('utm_url')).get('dr'), None)
+        # Include referals from another host
+        self.assertEqual(
+            parse_qs(
+                ga_dict_without_direct_referal.get('utm_url')).get('dr'),
+            ['http://test.com/some/path/'])
+        # Exlcude referals from the same host
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_direct_referal.get('utm_url')).get('dr'),
+            ['/some/path/'])
 
     @responses.activate
     @override_settings(

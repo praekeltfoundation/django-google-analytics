@@ -1,5 +1,8 @@
 Changelog
 =========
+4.3.5
+----------
+#.Remove self referal traffic
 4.3.4
 ----------
 #.Remove dr from URL logging
