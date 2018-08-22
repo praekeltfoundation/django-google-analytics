@@ -13,7 +13,7 @@ def read(*parts):
 
 setup(
     name='django-google-analytics-app',
-    version='4.3.4',
+    version='4.3.5',
     description=('Django Google Analytics app allowing for server side/non-js '
                  'tracking.'),
     long_description=read('README.rst'),
