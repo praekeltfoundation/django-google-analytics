@@ -10,6 +10,10 @@ from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six import text_type
 from six.moves.urllib.parse import quote, urlencode
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
@@ -60,6 +64,9 @@ def build_ga_params(
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
+    parse_referer = urlparse(referer)
+    if parse_referer.netloc == domain:
+        referer = parse_referer.path
 
     custom_uip = None
     if hasattr(settings, 'CUSTOM_UIP_HEADER') and settings.CUSTOM_UIP_HEADER:
@@ -84,7 +91,7 @@ def build_ga_params(
         'z': str(random.randint(0, 0x7fffffff)),
         'dh': domain,
         'sr': '',
-        'dr': '_',
+        'dr': referer,
         'dp': quote(path.encode('utf-8')),
         'tid': account,
         'cid': visitor_id,
