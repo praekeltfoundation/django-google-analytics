@@ -67,7 +67,7 @@ class GoogleAnalyticsTestCase(TestCase):
             '/google-analytics/?p=%2Fhome&utmdebug='
             'True&r=test.com&tracking_code=ua-test-id')
         ga_url1 = response.get('X-GA-MOBILE-URL')
-        self.assertIsNone(parse_qs(ga_url1).get('uip'))
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['127.0.0.1'])
 
     def test_uip_for_single_value_in_http_header(self):
         client = Client(HTTP_X_FORWARDED_FOR='100.100.200.24')
