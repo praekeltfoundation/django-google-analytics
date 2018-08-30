@@ -82,6 +82,12 @@ def build_ga_params(
     # get client ip address
     if 'HTTP_X_FORWARDED_FOR' in meta:
         client_ip = meta.get('HTTP_X_FORWARDED_FOR', '')
+        if client_ip:
+            # The values in a proxied environment are usually presented in the
+            # following format:
+            # X-Forwarded-For: client, proxy1, proxy2
+            # In this case, we want the client IP Only
+            client_ip = client_ip.split(',')[0]
     else:
         client_ip = meta.get('REMOTE_ADDR', '')
 
