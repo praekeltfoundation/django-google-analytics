@@ -61,6 +61,50 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.10'])
 
+    def test_uip_for_empty_http_header(self):
+        client = Client(HTTP_X_FORWARDED_FOR='')
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url1 = response.get('X-GA-MOBILE-URL')
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['127.0.0.1'])
+
+    def test_uip_for_single_value_in_http_header(self):
+        client = Client(HTTP_X_FORWARDED_FOR='100.100.200.24')
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url1 = response.get('X-GA-MOBILE-URL')
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.24'])
+
+    def test_uip_for_multiple_values_in_http_header(self):
+        client = Client(HTTP_X_FORWARDED_FOR='100.100.200.24, 10.1.1.17')
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url1 = response.get('X-GA-MOBILE-URL')
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.24'])
+
+    def test_uip_with_custom_ip_respected(self):
+        client = Client(
+            HTTP_X_FORWARDED_FOR='100.100.200.24, 10.1.1.17',
+            HTTP_X_IORG_FBS_UIP='200.200.200.10')
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url1 = response.get('X-GA-MOBILE-URL')
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['200.200.200.10'])
+
+    def test_uip_with_custom_ip_respected_when_x_forwareded_for_is_empty(self):
+        client = Client(
+            HTTP_X_FORWARDED_FOR='',
+            HTTP_X_IORG_FBS_UIP='200.200.200.10')
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url1 = response.get('X-GA-MOBILE-URL')
+        self.assertEqual(parse_qs(ga_url1).get('uip'), ['200.200.200.10'])
+
     def test_ga_template_tag(self):
         rf = RequestFactory()
         post_request = rf.post('/submit/', {'foo': 'bar'})
