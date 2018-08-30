@@ -1,5 +1,8 @@
 Changelog
 =========
+4.3.6
+----------
+#.Ensure correct user IP is pulled from proxy header if it exists
 4.3.5
 ----------
 #.Remove self referal traffic
