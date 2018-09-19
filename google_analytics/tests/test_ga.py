@@ -301,7 +301,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(
             parse_qs(
                 ga_dict_with_campaign_params.get(
-                    'utm_url')).get('cc'), None)
+                    'utm_url')).get('cm'), None)
 
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
