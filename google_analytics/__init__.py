@@ -1,10 +1,7 @@
-CAMPAIGN_TRACKING_PARAMS = [
-    'utm_content',
-    'utm_term',
-    'cn',
-    'cs',
-    'cm',
-    'ck',
-    'cc',
-    'ci',
-]
+CAMPAIGN_TRACKING_PARAMS = {
+    'cc': 'utm_content',
+    'cs': 'utm_source',
+    'ck': 'utm_term',
+    'cm': 'utm_medium',
+    'cn': 'utm_campaign',
+}
