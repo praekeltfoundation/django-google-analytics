@@ -1,5 +1,9 @@
 Changelog
 =========
+4.3.7
+----------
+#. Ensure that the correct Campaign parameters are being sent to GA
+
 4.3.6
 ----------
 #.Ensure correct user IP is pulled from proxy header if it exists
