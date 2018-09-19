@@ -283,7 +283,7 @@ class GoogleAnalyticsTestCase(TestCase):
         tracking params are tracked correctly
         '''
         request = self.make_fake_request(
-            '/somewhere/?cn=campaign name&cs=campaign source')
+            '/somewhere/?utm_campaign=campaign name&utm_term=campaign keyword')
         ga_dict_with_campaign_params = build_ga_params(
             request, 'ua-test-id', '/compaign/path/')
         self.assertEqual(
@@ -291,13 +291,13 @@ class GoogleAnalyticsTestCase(TestCase):
                 'utm_url')).get('cn'), ['campaign name'])
         self.assertEqual(
             parse_qs(ga_dict_with_campaign_params.get(
-                'utm_url')).get('cs'), ['campaign source'])
+                'utm_url')).get('ck'), ['campaign keyword'])
 
         # params that aren't in the request should be excluded from the utm_url
         self.assertEqual(
             parse_qs(
                 ga_dict_with_campaign_params.get(
-                    'utm_url')).get('ck'), None)
+                    'utm_url')).get('cs'), None)
         self.assertEqual(
             parse_qs(
                 ga_dict_with_campaign_params.get(
