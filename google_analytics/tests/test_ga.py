@@ -279,7 +279,8 @@ class GoogleAnalyticsTestCase(TestCase):
     @responses.activate
     def test_build_ga_params_for_campaign_tracking_params(self):
         '''
-        Test that the  correct GA campaign tracking params are tracked correctly
+        Test that the  correct GA campaign
+        tracking params are tracked correctly
         '''
         request = self.make_fake_request(
             '/somewhere/?cn=campaign name&cs=campaign source')
