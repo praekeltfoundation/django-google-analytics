@@ -129,8 +129,8 @@ def build_ga_params(
 
     # update campaign params from request
     for param in CAMPAIGN_TRACKING_PARAMS:
-        ga_name = CAMPAIGN_TRACKING_PARAMS.get(param)
         if param in request.GET:
+            ga_name = CAMPAIGN_TRACKING_PARAMS.get(param)
             campaign_params[ga_name] = request.GET[param]
 
     # store campaign tracking parameters in session
