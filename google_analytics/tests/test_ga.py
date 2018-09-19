@@ -276,6 +276,33 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(
             parse_qs(ga_dict_with_custom.get('utm_url')).get('key'), ['value'])
 
+    @responses.activate
+    def test_build_ga_params_for_campaign_tracking_params(self):
+        '''
+        Test that the  correct GA campaign
+        tracking params are tracked correctly
+        '''
+        request = self.make_fake_request(
+            '/somewhere/?utm_campaign=campaign name&utm_term=campaign keyword')
+        ga_dict_with_campaign_params = build_ga_params(
+            request, 'ua-test-id', '/compaign/path/')
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('cn'), ['campaign name'])
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('ck'), ['campaign keyword'])
+
+        # params that aren't in the request should be excluded from the utm_url
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_campaign_params.get(
+                    'utm_url')).get('cs'), None)
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_campaign_params.get(
+                    'utm_url')).get('cm'), None)
+
     @override_settings(MIDDLEWARE_CLASSES=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
