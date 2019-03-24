@@ -15,7 +15,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'google_analytics',
     'djcelery',
-    'kombu.transport.django',
 ]
 
 MIDDLEWARE_CLASSES = [
