@@ -31,6 +31,10 @@ setup(
         'six',
         'structlog',
     ],
+    extras_require={
+        'test': ['responses'],
+        'lint': ['flake8'],
+    },
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
