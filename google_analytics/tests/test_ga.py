@@ -119,7 +119,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(url).get('utmdebug'), None)
 
     @override_settings(
-        MIDDLEWARE_CLASSES=[
+        MIDDLEWARE=[
             'django.contrib.sessions.middleware.SessionMiddleware',
             'google_analytics.middleware.GoogleAnalyticsMiddleware'
         ],
@@ -160,7 +160,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
 
     @override_settings(
-        MIDDLEWARE_CLASSES=[
+        MIDDLEWARE=[
             'django.contrib.sessions.middleware.SessionMiddleware',
             'google_analytics.middleware.GoogleAnalyticsMiddleware'
         ],
@@ -303,7 +303,7 @@ class GoogleAnalyticsTestCase(TestCase):
                 ga_dict_with_campaign_params.get(
                     'utm_url')).get('cm'), None)
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ])
@@ -332,7 +332,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS_IGNORE_PATH=['/ignore-this/'])
@@ -343,7 +343,7 @@ class GoogleAnalyticsTestCase(TestCase):
 
         self.assertEqual(len(responses.calls), 0)
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS=None)

@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'djcelery',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 ]
 
