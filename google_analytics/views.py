@@ -21,7 +21,7 @@ GIF_DATA = reduce(lambda x, y: x + struct.pack('B', y),
 def get_ip(remote_address):
     if not remote_address:
         return ''
-    matches = re.match('^([^.]+\.[^.]+\.[^.]+\.).*', remote_address)
+    matches = re.match(r'^([^.]+\.[^.]+\.[^.]+\.).*', remote_address)
     if matches:
         return matches.groups()[0] + "0"
     else:

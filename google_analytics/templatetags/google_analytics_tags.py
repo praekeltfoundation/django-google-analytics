@@ -1,6 +1,6 @@
 from django import template
-from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.urls import reverse
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six.moves.urllib.parse import parse_qs, urlencode, urlparse

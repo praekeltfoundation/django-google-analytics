@@ -23,7 +23,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'django~=1.11.15',
+        'Django>=1.11,<2.2',
         'django-celery',
         'celery<4.0',
         'requests',
@@ -31,6 +31,10 @@ setup(
         'six',
         'structlog',
     ],
+    extras_require={
+        'test': ['responses'],
+        'lint': ['flake8'],
+    },
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -41,9 +45,9 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     zip_safe=False,
