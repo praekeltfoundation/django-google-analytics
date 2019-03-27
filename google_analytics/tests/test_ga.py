@@ -136,10 +136,10 @@ class GoogleAnalyticsTestCase(TestCase):
         request = self.make_fake_request(
             '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
 
-        middleware = GoogleAnalyticsMiddleware()
         html = ("<html><head><title>"
                 "ما-مدى-جاهزيتك-للإنترنت</title></head></html>")
-        response = middleware.process_response(request, HttpResponse(html))
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse(html))
+        response = middleware(request)
         uid = response.cookies.get(COOKIE_NAME).value
 
         self.assertEqual(len(responses.calls), 1)
@@ -179,9 +179,9 @@ class GoogleAnalyticsTestCase(TestCase):
         request = self.make_fake_request(
             '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
 
-        middleware = GoogleAnalyticsMiddleware()
         html = "<html><head><title>title</title></head></html>"
-        response = middleware.process_response(request, HttpResponse(html))
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse(html))
+        response = middleware(request)
 
         ga_dict = build_ga_params(
             request, response, 'ua-test-id', '/some/path/',
@@ -317,8 +317,8 @@ class GoogleAnalyticsTestCase(TestCase):
         headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
         request = self.make_fake_request('/somewhere/', headers)
 
-        middleware = GoogleAnalyticsMiddleware()
-        response = middleware.process_response(request, HttpResponse())
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse())
+        response = middleware(request)
         uid = response.cookies.get(COOKIE_NAME).value
 
         self.assertEqual(len(responses.calls), 1)
@@ -338,8 +338,8 @@ class GoogleAnalyticsTestCase(TestCase):
     ], GOOGLE_ANALYTICS_IGNORE_PATH=['/ignore-this/'])
     def test_ga_middleware_ignore_path(self):
         request = self.make_fake_request('/ignore-this/somewhere/')
-        middleware = GoogleAnalyticsMiddleware()
-        middleware.process_response(request, HttpResponse())
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse())
+        middleware(request)
 
         self.assertEqual(len(responses.calls), 0)
 
