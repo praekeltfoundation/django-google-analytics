@@ -64,7 +64,7 @@ def build_ga_params(
     if request.method == 'GET':
         ni = '0'
     else:
-        ni='1'
+        ni = '1'
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
