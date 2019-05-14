@@ -61,6 +61,10 @@ def build_ga_params(
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
+    if request.method == 'GET':
+        ni = '0'
+    else:
+        ni='1'
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
@@ -102,6 +106,7 @@ def build_ga_params(
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
+        'ni': ni,
     }
 
     # add user ID if exists
