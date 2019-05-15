@@ -64,6 +64,21 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.10'])
 
+    def test_ga_url__ni(self):
+        client = Client()
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url = response.get('X-GA-MOBILE-URL')
+
+        response = client.post(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url_post = response.get('X-GA-MOBILE-URL')
+
+        self.assertEqual(parse_qs(ga_url).get('ni'), ['0'])
+        self.assertEqual(parse_qs(ga_url_post).get('ni'), ['1'])
+
     def test_uip_for_empty_http_header(self):
         client = Client(HTTP_X_FORWARDED_FOR='')
         response = client.get(
