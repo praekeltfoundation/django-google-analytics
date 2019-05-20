@@ -1,5 +1,8 @@
 Changelog
 =========
+4.3.9
+----------
+# Reset security settings
 4.3.8
 ----------
 # Add non-interactive (ni) parameter for GA tracking
