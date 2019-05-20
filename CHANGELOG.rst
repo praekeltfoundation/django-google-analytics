@@ -1,5 +1,8 @@
 Changelog
 =========
+4.3.8
+----------
+# Add non-interactive (ni) parameter for GA tracking
 4.3.7
 ----------
 #. Ensure that the correct Campaign parameters are being sent to GA

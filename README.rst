@@ -44,9 +44,9 @@ Using ``<img/>`` and sticking it in your ``base.html``::
 
 Using Django's middleware, you can process every request and use Celery to make the request to Google Analytics::
 
-    MIDDLEWARE_CLASSES = (
+    MIDDLEWARE = [
         'google_analytics.middleware.GoogleAnalyticsMiddleware',
-    )
+    ]
 
 You have to add ``google_analytics`` to your ``CELERY_IMPORTS``::
 
@@ -55,4 +55,3 @@ You have to add ``google_analytics`` to your ``CELERY_IMPORTS``::
 You can also specify paths that will be excluded when tracking::
 
     GOOGLE_ANALYTICS_IGNORE_PATH = ['/health/', ]
-

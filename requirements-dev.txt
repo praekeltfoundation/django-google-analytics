@@ -1,6 +1,2 @@
--e .
+-e .[test,lint]
 coverage
-django-setuptest
-flake8
-responses
-structlog
