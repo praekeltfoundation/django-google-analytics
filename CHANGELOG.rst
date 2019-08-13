@@ -1,11 +1,29 @@
 Changelog
 =========
+4.3.10
+----------
+# Add gclid parameter for Campaign auto-tagging
+
+4.3.9
+----------
+# Reset security settings
+
+4.3.8
+----------
+# Add non-interactive (ni) parameter for GA tracking
+
+4.3.7
+----------
+#. Ensure that the correct Campaign parameters are being sent to GA
+
 4.3.6
 ----------
 #.Ensure correct user IP is pulled from proxy header if it exists
+
 4.3.5
 ----------
 #.Remove self referal traffic
+
 4.3.4
 ----------
 #.Remove dr from URL logging

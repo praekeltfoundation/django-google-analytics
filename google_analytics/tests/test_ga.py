@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import unittest
+
 import responses
 
+import django
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
 from django.test.client import Client
@@ -61,6 +64,21 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url1).get('tid'), ['ua-test-id'])
         self.assertEqual(parse_qs(ga_url1).get('uip'), ['100.100.200.10'])
 
+    def test_ga_url__ni(self):
+        client = Client()
+        response = client.get(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url = response.get('X-GA-MOBILE-URL')
+
+        response = client.post(
+            '/google-analytics/?p=%2Fhome&utmdebug='
+            'True&r=test.com&tracking_code=ua-test-id')
+        ga_url_post = response.get('X-GA-MOBILE-URL')
+
+        self.assertEqual(parse_qs(ga_url).get('ni'), ['0'])
+        self.assertEqual(parse_qs(ga_url_post).get('ni'), ['1'])
+
     def test_uip_for_empty_http_header(self):
         client = Client(HTTP_X_FORWARDED_FOR='')
         response = client.get(
@@ -119,7 +137,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(url).get('utmdebug'), None)
 
     @override_settings(
-        MIDDLEWARE_CLASSES=[
+        MIDDLEWARE=[
             'django.contrib.sessions.middleware.SessionMiddleware',
             'google_analytics.middleware.GoogleAnalyticsMiddleware'
         ],
@@ -127,6 +145,48 @@ class GoogleAnalyticsTestCase(TestCase):
         BROKER_URL='memory://')
     @responses.activate
     def test_ga_middleware(self):
+        responses.add(
+            responses.GET, 'http://www.google-analytics.com/collect',
+            body='',
+            status=200)
+
+        headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
+        request = self.make_fake_request(
+            '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
+
+        html = ("<html><head><title>"
+                "ما-مدى-جاهزيتك-للإنترنت</title></head></html>")
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse(html))
+        response = middleware(request)
+        uid = response.cookies.get(COOKIE_NAME).value
+
+        self.assertEqual(len(responses.calls), 1)
+
+        ga_url = responses.calls[0].request.url
+
+        self.assertEqual(parse_qs(ga_url).get('t'), ['pageview'])
+        self.assertEqual(
+            parse_qs(ga_url).get('dp'), [
+                '/sections/deep-soul/%D9%85%D8%A7-%D9%85%D8%AF%D9%89-'
+                '%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8%AA%D9%83-%D9%84%D9'
+                '%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA/'])
+        self.assertEqual(parse_qs(ga_url).get('dt'), [
+            '%D9%85%D8%A7-%D9%85%D8%AF%D9%89-%D8%AC%D8%A7%D9%87%D8%B2%D9%8A%D8'
+            '%AA%D9%83-%D9%84%D9%84%D8%A5%D9%86%D8%AA%D8%B1%D9%86%D8%AA'])
+        self.assertEqual(parse_qs(ga_url).get('tid'), ['ua-test-id'])
+        self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
+        self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
+
+    @unittest.skipIf(django.VERSION >= (2, 0), "not supported on Django >= 2")
+    @override_settings(
+        MIDDLEWARE_CLASSES=[
+            'django.contrib.sessions.middleware.SessionMiddleware',
+            'google_analytics.middleware.GoogleAnalyticsMiddleware'
+        ],
+        TASK_ALWAYS_EAGER=True,
+        BROKER_URL='memory://')
+    @responses.activate
+    def test_ga_middleware_pre_dj110(self):
         responses.add(
             responses.GET, 'http://www.google-analytics.com/collect',
             body='',
@@ -160,7 +220,7 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
 
     @override_settings(
-        MIDDLEWARE_CLASSES=[
+        MIDDLEWARE=[
             'django.contrib.sessions.middleware.SessionMiddleware',
             'google_analytics.middleware.GoogleAnalyticsMiddleware'
         ],
@@ -179,9 +239,9 @@ class GoogleAnalyticsTestCase(TestCase):
         request = self.make_fake_request(
             '/sections/deep-soul/ما-مدى-جاهزيتك-للإنترنت/', headers)
 
-        middleware = GoogleAnalyticsMiddleware()
         html = "<html><head><title>title</title></head></html>"
-        response = middleware.process_response(request, HttpResponse(html))
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse(html))
+        response = middleware(request)
 
         ga_dict = build_ga_params(
             request, response, 'ua-test-id', '/some/path/',
@@ -276,7 +336,52 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(
             parse_qs(ga_dict_with_custom.get('utm_url')).get('key'), ['value'])
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @responses.activate
+    def test_build_ga_params_for_campaign_tracking_params(self):
+        '''
+        Test that the  correct GA campaign
+        tracking params are tracked correctly
+        '''
+        request = self.make_fake_request(
+            '/somewhere/?utm_campaign=campaign name&utm_term=campaign keyword')
+        ga_dict_with_campaign_params = build_ga_params(
+            request, 'ua-test-id', '/compaign/path/')
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('cn'), ['campaign name'])
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('ck'), ['campaign keyword'])
+
+        # params that aren't in the request should be excluded from the utm_url
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_campaign_params.get(
+                    'utm_url')).get('cs'), None)
+        self.assertEqual(
+            parse_qs(
+                ga_dict_with_campaign_params.get(
+                    'utm_url')).get('cm'), None)
+
+    @responses.activate
+    def test_build_ga_params_for_campaign_auto_tagging(self):
+        '''
+        Test that the GA campaign auto-tagging
+        tracking params are tracked correctly
+        '''
+        request = self.make_fake_request(
+            '/somewhere/?gclid=TeSter-123-ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefgh'
+            'ijklmnopqrstuvwxyz-0123456789-AaBbCcDdEeFfGgHhIiJjKkLl')
+        ga_dict_with_campaign_params = build_ga_params(
+            request, 'ua-test-id', '/compaign/path/')
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('gclid'),
+            ['TeSter-123-ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz'
+             '-0123456789-AaBbCcDdEeFfGgHhIiJjKkLl']
+            )
+
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ])
@@ -290,8 +395,8 @@ class GoogleAnalyticsTestCase(TestCase):
         headers = {'HTTP_X_IORG_FBS_UIP': '100.100.200.10'}
         request = self.make_fake_request('/somewhere/', headers)
 
-        middleware = GoogleAnalyticsMiddleware()
-        response = middleware.process_response(request, HttpResponse())
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse())
+        response = middleware(request)
         uid = response.cookies.get(COOKIE_NAME).value
 
         self.assertEqual(len(responses.calls), 1)
@@ -305,18 +410,18 @@ class GoogleAnalyticsTestCase(TestCase):
         self.assertEqual(parse_qs(ga_url).get('cid'), [uid])
         self.assertEqual(parse_qs(ga_url).get('uip'), ['100.100.200.10'])
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS_IGNORE_PATH=['/ignore-this/'])
     def test_ga_middleware_ignore_path(self):
         request = self.make_fake_request('/ignore-this/somewhere/')
-        middleware = GoogleAnalyticsMiddleware()
-        middleware.process_response(request, HttpResponse())
+        middleware = GoogleAnalyticsMiddleware(lambda req: HttpResponse())
+        middleware(request)
 
         self.assertEqual(len(responses.calls), 0)
 
-    @override_settings(MIDDLEWARE_CLASSES=[
+    @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
     ], GOOGLE_ANALYTICS=None)

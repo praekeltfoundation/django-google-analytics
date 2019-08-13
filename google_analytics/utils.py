@@ -61,6 +61,10 @@ def build_ga_params(
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
+    if request.method == 'GET':
+        ni = '0'
+    else:
+        ni = '1'
 
     # determine the referrer
     referer = referer or request.GET.get('r', '')
@@ -102,6 +106,7 @@ def build_ga_params(
         'tid': account,
         'cid': visitor_id,
         'uip': custom_uip or client_ip,
+        'ni': ni,
     }
 
     # add user ID if exists
@@ -129,8 +134,9 @@ def build_ga_params(
 
     # update campaign params from request
     for param in CAMPAIGN_TRACKING_PARAMS:
-        if param in request.GET:
-            campaign_params[param] = request.GET[param]
+        ga_name = CAMPAIGN_TRACKING_PARAMS.get(param)
+        if ga_name in request.GET:
+            campaign_params[param] = request.GET[ga_name]
 
     # store campaign tracking parameters in session
     request.session[CAMPAIGN_PARAMS_KEY] = campaign_params

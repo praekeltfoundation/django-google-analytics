@@ -1,24 +1,38 @@
-sudo: false
+dist: xenial
 language: python
 
 cache: pip
 before_install:
   - pip install --upgrade pip
 install:
-  - pip install -r requirements-dev.txt
+  - pip install tox
   - pip install coveralls
 script:
-  - DJANGO_SETTINGS_MODULE=test_settings coverage run --source='google_analytics' "$(which django-admin)" test
-  - flake8
+  - tox
 after_success:
   - coveralls
 
 jobs:
   include:
     - python: '2.7'
-    - python: '3.4'
+      env: TOXENV=py27-dj111
     - python: '3.5'
+      env: TOXENV=py35-dj111
     - python: '3.6'
+      env: TOXENV=py36-dj111
+    - python: '3.6'
+      env: TOXENV=py36-dj20
+    - python: '3.6'
+      env: TOXENV=py36-dj21
+    - python: '3.7'
+      env: TOXENV=py37-dj111
+    - python: '3.7'
+      env: TOXENV=py37-dj20
+    - python: '3.7'
+      env: TOXENV=py37-dj21
+
+    - python: '3.6'
+      env: TOXENV=lint
 
     - stage: release
       python: '3.6'
