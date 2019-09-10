@@ -1,5 +1,9 @@
 Changelog
 =========
+4.4.0
+----------
+# Add django 2.2+ support, drop support for python 2
+
 4.3.10
 ----------
 # Add gclid parameter for Campaign auto-tagging
