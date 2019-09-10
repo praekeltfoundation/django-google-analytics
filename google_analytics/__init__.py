@@ -4,4 +4,5 @@ CAMPAIGN_TRACKING_PARAMS = {
     'cs': 'utm_source',
     'cm': 'utm_medium',
     'cn': 'utm_campaign',
+    'gclid': 'gclid',
 }

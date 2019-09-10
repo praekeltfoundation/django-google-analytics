@@ -363,6 +363,24 @@ class GoogleAnalyticsTestCase(TestCase):
                 ga_dict_with_campaign_params.get(
                     'utm_url')).get('cm'), None)
 
+    @responses.activate
+    def test_build_ga_params_for_campaign_auto_tagging(self):
+        '''
+        Test that the GA campaign auto-tagging
+        tracking params are tracked correctly
+        '''
+        request = self.make_fake_request(
+            '/somewhere/?gclid=TeSter-123-ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefgh'
+            'ijklmnopqrstuvwxyz-0123456789-AaBbCcDdEeFfGgHhIiJjKkLl')
+        ga_dict_with_campaign_params = build_ga_params(
+            request, 'ua-test-id', '/compaign/path/')
+        self.assertEqual(
+            parse_qs(ga_dict_with_campaign_params.get(
+                'utm_url')).get('gclid'),
+            ['TeSter-123-ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz'
+             '-0123456789-AaBbCcDdEeFfGgHhIiJjKkLl']
+            )
+
     @override_settings(MIDDLEWARE=[
         'django.contrib.sessions.middleware.SessionMiddleware',
         'google_analytics.middleware.GoogleAnalyticsMiddleware'
