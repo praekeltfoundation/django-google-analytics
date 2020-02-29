@@ -13,7 +13,7 @@ def read(*parts):
 
 setup(
     name='django-google-analytics-app',
-    version='4.4.0',
+    version='4.4.1',
     description=('Django Google Analytics app allowing for server side/non-js '
                  'tracking.'),
     long_description=read('README.rst'),
@@ -23,7 +23,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'Django>=2.2.5,<2.3',
+        'Django>=2.2.5,<3.1',
         'django-celery',
         'celery<4.0',
         'requests',
@@ -48,7 +48,9 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    keywords=['django', 'google', 'analytics'],
     zip_safe=False,
 )
