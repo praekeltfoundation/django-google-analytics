@@ -1,5 +1,9 @@
 Changelog
 =========
+4.4.1
+----------
+# Add Django 3.0 and Python 3.8 support
+
 4.4.0
 ----------
 # Add django 2.2+ support, drop support for python 2
@@ -26,7 +30,7 @@ Changelog
 
 4.3.5
 ----------
-#.Remove self referal traffic
+#.Remove self referral traffic
 
 4.3.4
 ----------
@@ -91,7 +95,7 @@ Changelog
 
 2.1.0
 -----
-#. Allow uip to be overriden using custom header
+#. Allow uip to be overridden using custom header
 
 2.0.3
 -----
