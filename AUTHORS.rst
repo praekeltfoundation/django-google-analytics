@@ -13,3 +13,8 @@ Unomena
 
 * Euan Jonker
 
+
+Wayne Lambert
+-------------
+
+* Wayne Lambert
