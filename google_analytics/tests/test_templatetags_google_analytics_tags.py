@@ -1,9 +1,7 @@
-from google_analytics.templatetags.google_analytics_tags import (
-    google_analytics,
-)
-
 from django.template import Context, Template
 from django.test import RequestFactory, TestCase, override_settings
+from google_analytics.templatetags.google_analytics_tags import \
+    google_analytics
 
 
 class GoogleAnalyticsTagsTestCase(TestCase):

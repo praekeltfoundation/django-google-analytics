@@ -1,5 +1,11 @@
 Changelog
 =========
+4.4.2
+----------
+# Add support for Django 3.1
+# Add support for Celery 4.x.x
+
+----------
 4.4.1
 ----------
 # Add Django 3.0 and Python 3.8 support

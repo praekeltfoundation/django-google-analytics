@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
+
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
-from google_analytics.utils import build_ga_params, set_cookie
 from google_analytics.tasks import send_ga_tracking
+from google_analytics.utils import build_ga_params, set_cookie
 
 
 class GoogleAnalyticsMiddleware(MiddlewareMixin):

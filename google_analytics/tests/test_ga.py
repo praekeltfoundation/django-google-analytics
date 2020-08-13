@@ -2,20 +2,18 @@
 
 import unittest
 
-import responses
+from six.moves.urllib.parse import parse_qs
 
 import django
+import responses
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
-from django.test.client import Client
-from django.test.client import RequestFactory
-from django.contrib.sessions.middleware import SessionMiddleware
-
-from google_analytics.utils import COOKIE_NAME, build_ga_params
-from google_analytics.templatetags.google_analytics_tags import google_analytics # noqa
+from django.test.client import Client, RequestFactory
 from google_analytics.middleware import GoogleAnalyticsMiddleware
-
-from six.moves.urllib.parse import parse_qs
+from google_analytics.templatetags.google_analytics_tags import \
+    google_analytics  # noqa
+from google_analytics.utils import COOKIE_NAME, build_ga_params
 
 
 class GoogleAnalyticsTestCase(TestCase):

@@ -3,10 +3,10 @@ import struct
 from functools import reduce
 
 import requests
+
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
 from google_analytics.utils import build_ga_params, set_cookie
-
 
 GIF_DATA = reduce(lambda x, y: x + struct.pack('B', y),
                   [0x47, 0x49, 0x46, 0x38, 0x39, 0x61,

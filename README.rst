@@ -18,10 +18,10 @@ Installation
 #. Specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_, i.e.::
 
     GOOGLE_ANALYTICS = {
-        'google_analytics_id': 'xxx',
+        'google_analytics_id': 'UA-000000-2',
     }
 
-   where ``xxx`` is your tracking code.
+   where ``UA-000000-2`` is your unique tracking code.
 
 #. If you intend tracking through middleware and Celery remember to `install Celery and run its worker process <http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html>`_.
 
