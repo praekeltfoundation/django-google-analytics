@@ -1,7 +1,7 @@
 import codecs
 import os
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -23,7 +23,7 @@ setup(
     url='http://github.com/praekelt/django-google-analytics',
     packages=find_packages(),
     install_requires=[
-        'Django>=2.2.5,<3.1',
+        'Django>=2.2.5,<3.2',
         'django-celery',
         'celery<4.0',
         'requests',
@@ -37,7 +37,7 @@ setup(
     },
     include_package_data=True,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',

@@ -1,15 +1,15 @@
 import random
 import time
 import uuid
-import structlog
-
-from django.conf import settings
-from django.utils.translation import get_language_from_request
-
-from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
 from six import text_type
 from six.moves.urllib.parse import quote, urlencode
+
+import structlog
+from django.conf import settings
+from django.utils.translation import get_language_from_request
+from google_analytics import CAMPAIGN_TRACKING_PARAMS
+
 try:
     from urllib.parse import urlparse
 except ImportError:
@@ -61,11 +61,7 @@ def build_ga_params(
     meta = request.META
     # determine the domian
     domain = meta.get('HTTP_HOST', '')
-    if request.method == 'GET':
-        ni = '0'
-    else:
-        ni = '1'
-
+    ni = '0' if request.method == 'GET' else '1'
     # determine the referrer
     referer = referer or request.GET.get('r', '')
     parse_referer = urlparse(referer)
@@ -148,11 +144,10 @@ def build_ga_params(
     ga_url = "http://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urlencode(params)
     ga_logging_enabled = False
-    if hasattr(settings, 'ENABLE_GA_LOGGING'):
-        if settings.ENABLE_GA_LOGGING:
-            log = structlog.get_logger()
-            log.msg('GA_URL: %s' % utm_url, user_agent=user_agent)
-            ga_logging_enabled = True
+    if hasattr(settings, 'ENABLE_GA_LOGGING') and settings.ENABLE_GA_LOGGING:
+        log = structlog.get_logger()
+        log.msg('GA_URL: %s' % utm_url, user_agent=user_agent)
+        ga_logging_enabled = True
 
     locale = get_language_from_request(request)
 

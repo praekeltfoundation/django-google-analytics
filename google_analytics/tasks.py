@@ -1,4 +1,5 @@
 import requests
+
 from celery.task import task
 
 
