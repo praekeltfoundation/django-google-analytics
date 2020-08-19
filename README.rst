@@ -12,8 +12,7 @@ Installation
 #. Add ``google_analytics`` to your ``INSTALLED_APPS`` setting.
 #. Add URL include to your project's ``urls.py`` file::
 
-    (r'^djga/', include('google_analytics.urls')),        # This line for Django versions <= 1.11
-    re_path('djga/', include('google_analytics.urls')),   # This line for Django versions >=2.0
+    re_path('djga/', include('google_analytics.urls')),
 
 #. Specify a Google Analytics `tracking code <https://support.google.com/analytics/bin/answer.py?hl=en&answer=1008080>`_, i.e.::
 
