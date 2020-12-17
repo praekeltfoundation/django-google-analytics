@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'google_analytics',
-    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +50,5 @@ GOOGLE_ANALYTICS = {
 ROOT_URLCONF = 'google_analytics.urls'
 
 CUSTOM_UIP_HEADER = 'HTTP_X_IORG_FBS_UIP'
-
-TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 CELERY_ALWAYS_EAGER = True
