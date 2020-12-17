@@ -46,7 +46,6 @@ class CeleryTestSuiteRunnerStoringResult(DiscoverRunner):
     def setup_test_environment(self, **kwargs):
         # Monkey-patch Task.on_success() method
         def on_success_patched(self, retval, task_id, args, kwargs):
-            app = current_app._get_current_object()
         Task.on_success = classmethod(on_success_patched)
 
         super(CeleryTestSuiteRunnerStoringResult, self).setup_test_environment(
