@@ -51,4 +51,6 @@ ROOT_URLCONF = 'google_analytics.urls'
 
 CUSTOM_UIP_HEADER = 'HTTP_X_IORG_FBS_UIP'
 
+TEST_RUNNER = 'google_analytics.test_runner.CeleryTestSuiteRunner'
+
 CELERY_ALWAYS_EAGER = True
