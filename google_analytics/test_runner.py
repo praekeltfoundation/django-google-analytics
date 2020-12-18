@@ -30,27 +30,3 @@ class CeleryTestSuiteRunner(DiscoverRunner):
     def setup_test_environment(self, **kwargs):
         _set_eager()
         super(CeleryTestSuiteRunner, self).setup_test_environment(**kwargs)
-
-
-class CeleryTestSuiteRunnerStoringResult(DiscoverRunner):
-    """Django test runner allowing testing of celery delayed tasks,
-    and storing the results of those tasks in ``TaskMeta``.
-    Requires setting CELERY_RESULT_BACKEND = 'database'.
-    USAGE:
-    In ``settings.py``::
-        TEST_RUNNER = '''
-            djcelery.contrib.test_runner.CeleryTestSuiteRunnerStoringResult
-        '''.strip()
-    """
-
-    def setup_test_environment(self, **kwargs):
-        # Monkey-patch Task.on_success() method
-        def on_success_patched(self, retval, task_id, args, kwargs):
-        Task.on_success = classmethod(on_success_patched)
-
-        super(CeleryTestSuiteRunnerStoringResult, self).setup_test_environment(
-            **kwargs
-        )
-
-        settings.CELERY_RESULT_BACKEND = 'database'
-        _set_eager()
