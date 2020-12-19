@@ -35,11 +35,11 @@ jobs:
     - python: '3.8'
       env: TOXENV=py38-dj31
 
-    - python: '3.6'
+    - python: '3.8'
       env: TOXENV=lint
 
     - stage: release
-      python: '3.6'
+      python: '3.8'
       if: tag IS present
       deploy:
         provider: pypi
