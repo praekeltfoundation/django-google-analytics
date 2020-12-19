@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.0.0
+5.0.1
 ----------
 # Remove djcelery
 Upgrade python 3.8
