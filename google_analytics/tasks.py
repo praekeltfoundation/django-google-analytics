@@ -1,6 +1,6 @@
 import requests
 
-from celery.task import task
+from celery import task
 
 
 @task(ignore_result=True)
