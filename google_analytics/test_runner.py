@@ -6,7 +6,7 @@ try:
 except ImportError:
     from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
 
-from celery import current_app, Task
+from celery import current_app
 
 
 USAGE = """\
