@@ -1,5 +1,11 @@
 Changelog
 =========
+
+5.0.0
+----------
+# Remove djcelery
+Upgrade python 3.8
+
 4.4.2
 ----------
 # Add support for Django 3.1
