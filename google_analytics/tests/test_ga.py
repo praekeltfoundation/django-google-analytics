@@ -144,7 +144,7 @@ class GoogleAnalyticsTestCase(TestCase):
     @responses.activate
     def test_ga_middleware(self):
         responses.add(
-            responses.GET, 'http://www.google-analytics.com/collect',
+            responses.GET, 'https://www.google-analytics.com/collect',
             body='',
             status=200)
 
@@ -186,7 +186,7 @@ class GoogleAnalyticsTestCase(TestCase):
     @responses.activate
     def test_ga_middleware_pre_dj110(self):
         responses.add(
-            responses.GET, 'http://www.google-analytics.com/collect',
+            responses.GET, 'https://www.google-analytics.com/collect',
             body='',
             status=200)
 
@@ -227,7 +227,7 @@ class GoogleAnalyticsTestCase(TestCase):
     @responses.activate
     def test_build_ga_params_for_title_encoding(self):
         responses.add(
-            responses.GET, 'http://www.google-analytics.com/collect',
+            responses.GET, 'https://www.google-analytics.com/collect',
             body='',
             status=200)
 
@@ -386,7 +386,7 @@ class GoogleAnalyticsTestCase(TestCase):
     @responses.activate
     def test_ga_middleware_no_title(self):
         responses.add(
-            responses.GET, 'http://www.google-analytics.com/collect',
+            responses.GET, 'https://www.google-analytics.com/collect',
             body='',
             status=200)
 
