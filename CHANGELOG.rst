@@ -1,6 +1,10 @@
 Changelog
 =========
 
+5.0.2
+----------
+# Default to HTTPS to avoid redirect
+
 5.0.1
 ----------
 # Remove djcelery
