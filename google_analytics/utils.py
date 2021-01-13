@@ -141,7 +141,7 @@ def build_ga_params(
     params.update(campaign_params)
 
     # construct the gif hit url
-    ga_url = "http://www.google-analytics.com/collect"
+    ga_url = "https://www.google-analytics.com/collect"
     utm_url = ga_url + "?&" + urlencode(params)
     ga_logging_enabled = False
     if hasattr(settings, 'ENABLE_GA_LOGGING') and settings.ENABLE_GA_LOGGING:
