@@ -1,6 +1,10 @@
 Changelog
 =========
 
+5.0.3
+----------
+# Add support for Django 3.2
+
 5.0.2
 ----------
 # Default to HTTPS to avoid redirect
