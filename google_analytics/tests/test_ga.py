@@ -23,9 +23,12 @@ class GoogleAnalyticsTestCase(TestCase):
         We don't have any normal views, so we're creating fake
         views using django's RequestFactory
         """
+        def mock_view(request):
+            return HttpResponse("")
+
         rf = RequestFactory()
         request = rf.get(url, **headers)
-        session_middleware = SessionMiddleware()
+        session_middleware = SessionMiddleware(mock_view)
         session_middleware.process_request(request)
         request.session.save()
         return request
