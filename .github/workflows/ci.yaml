@@ -45,12 +45,6 @@ jobs:
         env:
           TOXENV: ${{ matrix.tox-env }}
         run: tox
-      - name: Generate coverage report
-        run: coverage lcov 
-      - uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.lcov
   build-and-publish:
     needs: test
     runs-on: ubuntu-latest
