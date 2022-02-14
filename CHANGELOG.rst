@@ -1,6 +1,10 @@
 Changelog
 =========
 
+5.0.4
+----------
+# Add support for Django 4.0
+
 5.0.3
 ----------
 # Add support for Django 3.2
