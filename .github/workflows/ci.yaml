@@ -1,0 +1,64 @@
+name: Continuous Integration
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.5"
+            tox-env: "py35-dj22"
+          - python-version: "3.6"
+            tox-env: "py36-dj22"
+          - python-version: "3.6"
+            tox-env: "py36-dj32"
+          - python-version: "3.7"
+            tox-env: "py37-dj22"
+          - python-version: "3.7"
+            tox-env: "py37-dj32"
+          - python-version: "3.8"
+            tox-env: "py38-dj22"
+          - python-version: "3.8"
+            tox-env: "py38-dj32"
+          - python-version: "3.8"
+            tox-env: "py38-dj40"
+          - python-version: "3.9"
+            tox-env: "py39-dj22"
+          - python-version: "3.9"
+            tox-env: "py39-dj32"
+          - python-version: "3.9"
+            tox-env: "py39-dj40"
+          - python-version: "3.10"
+            tox-env: "py310-dj32"
+          - python-version: "3.10"
+            tox-env: "py310-dj40"
+          - python-version: "3.8"
+            tox-env: "lint"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install testing dependancies
+        run: pip install --upgrade pip tox coveralls
+      - name: Run tests
+        env:
+          TOXENV: ${{ matrix.tox-env }}
+        run: tox
+  build-and-publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install build dependancies
+        run: pip install --upgrade pip setuptools wheel
+      - name: Build
+        run: python setup.py sdist bdist_wheel
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        if: startsWith(github.ref, 'refs/tags')
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+      
