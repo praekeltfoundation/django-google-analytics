@@ -3,7 +3,8 @@ Changelog
 
 5.0.4
 ----------
-# Add support for Django 4.0
+- Add support for Django 4.0
+- Add support for Celery 5
 
 5.0.3
 ----------
