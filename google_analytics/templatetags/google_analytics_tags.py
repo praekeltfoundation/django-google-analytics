@@ -31,7 +31,7 @@ def google_analytics(context, tracking_code=None, debug=False):
     if referer:
         params['r'] = referer
     # remove collected parameters from the path and pass it on
-    path = request.path
+    path = request.get_full_path()
     parsed_url = urlparse(path)
     query = parse_qs(parsed_url.query)
     for param in params:
