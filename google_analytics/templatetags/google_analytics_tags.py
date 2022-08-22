@@ -22,7 +22,7 @@ def google_analytics(context, tracking_code=None, debug=False):
     # intialise the parameters collection
     params = {}
     # collect the campaign tracking parameters from the request
-    for param in CAMPAIGN_TRACKING_PARAMS:
+    for param in CAMPAIGN_TRACKING_PARAMS.values():
         value = request.GET.get(param, None)
         if value:
             params[param] = value
