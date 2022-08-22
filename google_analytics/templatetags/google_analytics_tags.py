@@ -37,7 +37,7 @@ def google_analytics(context, tracking_code=None, debug=False):
     for param in params:
         if param in query:
             del query[param]
-    query = urlencode(query)
+    query = urlencode(query, doseq=True)
     new_url = parsed_url._replace(query=query)
     params['p'] = new_url.geturl()
     params['tracking_code'] = tracking_code or settings.GOOGLE_ANALYTICS[
