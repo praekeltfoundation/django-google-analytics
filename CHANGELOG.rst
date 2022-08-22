@@ -1,6 +1,10 @@
 Changelog
 =========
 
+5.0.6
+----------
+- Fix query params in request URL not being sent to Google Analytics
+
 5.0.5
 ----------
 - Add support for Celery 5

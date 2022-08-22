@@ -14,7 +14,8 @@ Unomena
 * Euan Jonker
 
 
-Wayne Lambert
--------------
+Individual
+----------
 
 * Wayne Lambert
+* Sher Ali
