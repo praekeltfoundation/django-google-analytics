@@ -53,7 +53,8 @@ class GoogleAnalyticsTagsTestCase(TestCase):
 
     def test_query_param_with_campaign(self):
         request = self.factory.get(
-            '/en/?utm_content=content&utm_term=term&utm_source=source&utm_medium=medium&utm_campaign=campaign')
+            '/en/?utm_content=content&utm_term=term&utm_source=source'
+            '&utm_medium=medium&utm_campaign=campaign')
         context = Context({'request': request})
 
         rendered_template = google_analytics(context, tracking_code='my-code')
