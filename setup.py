@@ -27,7 +27,6 @@ setup(
         'celery<6.0.0',
         'requests',
         'beautifulsoup4',
-        'six',
         'structlog',
     ],
     extras_require={
