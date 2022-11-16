@@ -1,6 +1,13 @@
 Changelog
 =========
 
+6.0.0
+----------
+- Add support for Django 4.1
+- Add support for Python 3.11 (on Django 4.1)
+- Remove support for Django 2.2
+- Remove support for Python 3.5
+
 5.0.6
 ----------
 - Fix query params in request URL not being sent to Google Analytics
