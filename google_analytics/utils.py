@@ -2,18 +2,13 @@ import random
 import time
 import uuid
 
-from six import text_type
-from six.moves.urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlparse
 
 import structlog
 from django.conf import settings
 from django.utils.translation import get_language_from_request
 from google_analytics import CAMPAIGN_TRACKING_PARAMS
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
 
 VERSION = '1'
 COOKIE_NAME = '__utmmobile'
@@ -114,8 +109,7 @@ def build_ga_params(
 
     # add page title if supplied
     if title:
-        u_title = title.decode('utf-8') if isinstance(title, bytes) else title
-        params.update({'dt': quote(text_type(u_title).encode('utf-8'))})
+        params.update({'dt': quote(title)})
     # add event parameters if supplied
     if event:
         params.update({

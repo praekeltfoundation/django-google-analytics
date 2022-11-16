@@ -2,7 +2,7 @@
 
 import unittest
 
-from six.moves.urllib.parse import parse_qs
+from urllib.parse import parse_qs
 
 import django
 import responses

@@ -1,4 +1,4 @@
-from six.moves.urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from django import template
 from django.conf import settings
